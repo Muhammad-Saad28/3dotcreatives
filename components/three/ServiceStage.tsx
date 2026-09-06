@@ -191,20 +191,20 @@ const TL = {
   /*
    * Service holds settled before transitioning.
    */
-  HOLD_END: 0.35,
+  HOLD_END: 0.18,
 
   /*
-   * Previous model moves out — slow and gradual.
+   * Previous model moves out — very slow and gradual.
    */
-  SLIDE_OUT_START: 0.35,
-  SLIDE_OUT_END: 0.47,
+  SLIDE_OUT_START: 0.18,
+  SLIDE_OUT_END: 0.35,
 
   /*
    * MAIN ROTATION.
    *
-   * Full 360° — slow, natural spin.
+   * Full 360° — very leisurely, unhurried spin.
    */
-  ROTATION_START: 0.38,
+  ROTATION_START: 0.20,
   ROTATION_END: 0.58,
 
   /*
@@ -214,13 +214,13 @@ const TL = {
   BREATH_END: 0.63,
 
   /*
-   * Incoming model — slow, smooth entrance.
+   * Incoming model — very slow, smooth entrance.
    */
   MODEL_IN_START: 0.63,
-  MODEL_SETTLED: 0.97,
+  MODEL_SETTLED: 0.98,
 
   /*
-   * Final hold.
+   * Final hold — service visible and settled.
    */
   HOLD_FINAL: 1.0,
 } as const;
@@ -924,10 +924,10 @@ export default function ServiceStage({
      * Higher lambda = snappier.
      * Lower lambda = softer.
      */
-    const POSITION_DAMP = 14;
-    const ROTATION_DAMP = 16;
-    const OPACITY_DAMP = 25;
-    const SCALE_DAMP = 14;
+    const POSITION_DAMP = 8;
+    const ROTATION_DAMP = 10;
+    const OPACITY_DAMP = 10;
+    const SCALE_DAMP = 8;
 
     sm.current.prevX =
       THREE.MathUtils.damp(

@@ -174,15 +174,15 @@ const SECTIONS = [
 /*   TEXT_FADE_OUT_START  sits after hold               (0.02)                 */
 /*   TEXT_FADE_OUT_END    before peak dots spin          (0.35)                 */
 /*   TEXT_FADE_IN_START   matches TL.MODEL_IN_START   (0.63)                 */
-/*   TEXT_FADE_IN_END     matches TL.MODEL_SETTLED    (0.97)                 */
+/*   TEXT_FADE_IN_END     matches TL.MODEL_SETTLED    (0.98)                 */
 /* -------------------------------------------------------------------------- */
 
 const SECTION_COUNT = 10;
 const TL_TEXT = {
   FADE_OUT_START: 0.00,
-  FADE_OUT_END:   0.42,
+  FADE_OUT_END:   0.32,
   FADE_IN_START:  0.63,
-  FADE_IN_END:    0.97,
+  FADE_IN_END:    0.98,
 } as const;
 
 /* Y drift amplitude (px).  Zero when user prefers reduced motion. */

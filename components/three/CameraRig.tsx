@@ -62,14 +62,14 @@ export default function CameraRig({
     );
 
     // Soft lerp — camera should feel independent, not rigid
-    camera.position.lerp(targetPos.current, 0.015);
+    camera.position.lerp(targetPos.current, 0.008);
 
     const dir = new THREE.Vector3();
     camera.getWorldDirection(dir);
     const currentLookAt = new THREE.Vector3()
       .copy(camera.position)
       .add(dir.multiplyScalar(5));
-    currentLookAt.lerp(targetLookAt.current, 0.015);
+    currentLookAt.lerp(targetLookAt.current, 0.008);
     camera.lookAt(currentLookAt);
   });
 
