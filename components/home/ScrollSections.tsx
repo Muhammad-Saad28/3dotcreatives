@@ -435,7 +435,7 @@ export default function ScrollSections({
               </span>
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-dark-olive leading-[1.0]">
                 WE CREATE <br />
-                <span className="text-rust-gold italic">IDEAS THAT MOVE.</span>
+                <span className="text-rust-gold font-bold">IDEAS THAT MOVE.</span>
               </h1>
               <p className="text-base text-dark-olive/70 max-w-sm leading-relaxed">
                 Digital experiences, content and creative solutions built for
@@ -485,7 +485,7 @@ export default function ScrollSections({
               </span>
               <h2 className="text-5xl md:text-6xl font-extrabold tracking-tight text-dark-olive leading-tight">
                 EVERYTHING <br />
-                <span className="text-rust-gold italic">CONNECTS.</span>
+                <span className="text-rust-gold font-bold">CONNECTS.</span>
               </h2>
               <h3 className="text-lg font-mono text-olive/80 tracking-widest pt-1">
                 IDEA. DESIGN. EXECUTION.
@@ -514,7 +514,7 @@ export default function ScrollSections({
               </span>
               <h2 className="text-5xl md:text-8xl font-extrabold tracking-tight text-dark-olive leading-none">
                 SELECTED <br />
-                <span className="text-rust-gold italic">WORK</span>
+                <span className="text-rust-gold font-bold">WORK</span>
               </h2>
               <p className="text-sm text-dark-olive/70 max-w-sm mx-auto leading-relaxed">
                 Explore selected brand cases, high-converting platforms, and

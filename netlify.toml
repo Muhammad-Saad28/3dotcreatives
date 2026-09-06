@@ -1,6 +1,12 @@
 [build]
-  command = "npm run build"
+  command = "npm run build && cp -r public/.next/public"
   publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[headers]]
+  for = "/models/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Type = "model/gltf-binary"
