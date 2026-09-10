@@ -112,13 +112,13 @@ const SECTION_COUNT = 10;
 const FINAL_X: Record<number, number> = {
   0: 0,
 
-  1: 2.05,   // Web
-  2: -2.05,  // App
-  3: 2.05,   // Content
-  4: -1.5,   // Social
-  5: 2.05,   // Marketing
-  6: -2.05,  // GBP
-  7: 2.05,   // Packaging
+  1: 1.75,   // Web
+  2: -1.75,  // App
+  3: 1.75,   // Content
+  4: -1.4,   // Social
+  5: 1.75,   // Marketing
+  6: -1.75,  // GBP
+  7: 1.75,   // Packaging
 
   8: 0,
   9: 0,
