@@ -17,23 +17,6 @@ import { useRef, useEffect, useState, ReactNode } from "react";
 /* HELPERS                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function clamp01(t: number): number {
-  return Math.max(0, Math.min(1, t));
-}
-
-function remap(value: number, min: number, max: number): number {
-  if (max === min) return 0;
-  return clamp01((value - min) / (max - min));
-}
-
-/*
- * Detect prefers-reduced-motion once at module load (client-side only).
- * Used to suppress Y-translation animations.
- */
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 /* -------------------------------------------------------------------------- */
 /* REVEAL WRAPPER — for non-service, document-flow sections                  */
 /* -------------------------------------------------------------------------- */
@@ -165,29 +148,10 @@ const SECTIONS = [
   },
 ] as const;
 
-/* -------------------------------------------------------------------------- */
-/* TEXT TRANSITION TIMELINE                                                   */
-/*                                                                            */
-/* These localT thresholds are intentionally aligned with the corresponding  */
-/* ServiceStage.tsx TL constants so text and model transition together.       */
-/*                                                                            */
-/*   TEXT_FADE_OUT_START  sits after hold               (0.02)                 */
-/*   TEXT_FADE_OUT_END    before peak dots spin          (0.35)                 */
-/*   TEXT_FADE_IN_START   matches TL.MODEL_IN_START   (0.63)                 */
-/*   TEXT_FADE_IN_END     matches TL.MODEL_SETTLED    (0.98)                 */
-/* -------------------------------------------------------------------------- */
-
 const SECTION_COUNT = 10;
-const TL_TEXT = {
-  FADE_OUT_START: 0.00,
-  FADE_OUT_END:   0.32,
-  FADE_IN_START:  0.63,
-  FADE_IN_END:    0.98,
-} as const;
 
-/* Y drift amplitude (px).  Zero when user prefers reduced motion. */
-const DRIFT_PX = prefersReducedMotion ? 0 : 18;
-
+/* -------------------------------------------------------------------------- */
+/* SERVICE TEXT BLOCK                                                         */
 /* -------------------------------------------------------------------------- */
 /* SERVICE TEXT BLOCK                                                         */
 /*                                                                            */
@@ -230,14 +194,14 @@ function ServiceTextBlock({
         pointerEvents: opacity > 0.5 ? "auto" : "none",
       }}
     >
-      <div className="w-full grid grid-cols-2 gap-8 items-center">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
 
         {/* ── TEXT column ─────────────────────────────────────────────── */}
         <div
           className={`flex ${
             isLeft
-              ? "justify-start col-start-1"
-              : "justify-end col-start-2 row-start-1"
+              ? "justify-start md:col-start-1"
+              : "justify-end md:col-start-2 md:row-start-1"
           }`}
         >
           <div className="space-y-6 max-w-sm">
@@ -308,67 +272,31 @@ function StickyServicePanel({ scrollProgress }: StickyServicePanelProps) {
   /* Derive section index and local phase progress */
   const rawProg = scrollProgress * SECTION_COUNT;
   const secIdx  = Math.min(9, Math.max(0, Math.floor(Math.min(rawProg, 9.9999))));
-  const localT  = rawProg - secIdx;
-
-  /* Panel is only active during service sections 1–7 */
   const isActive = secIdx >= 1 && secIdx <= 7;
 
-  /*
-   * prevSvcIdx: the service that was settled at the START of this section
-   *   0 = three-dots / hero (no service HTML text)
-   *   1–7 = previous service
-   *
-   * nextSvcIdx: the service entering DURING this section
-   *   1–7
-   */
-  const prevSvcIdx = secIdx - 1;
-  const nextSvcIdx = secIdx;
+  /* Current service index — the text shown corresponds to this section */
+  const currentSvcIdx = secIdx;
 
-  /* ── Opacity ──────────────────────────────────────────────────────────── */
-
-  /*
-   * Previous text fades OUT as soon as the hold period ends.
-   * For the very first transition (dots → Web, secIdx=1) there is no
-   * previous service text, so prevTextOpacity is always 0.
-   */
-  const prevTextOpacity =
-    isActive && prevSvcIdx >= 1
-      ? clamp01(
-          1 - remap(localT, TL_TEXT.FADE_OUT_START, TL_TEXT.FADE_OUT_END)
-        )
-      : 0;
-
-  /*
-   * New text fades IN starting when the model begins entering from the side.
-   * This means text and model arrive as one visual unit.
-   */
-  const nextTextOpacity =
-    isActive && nextSvcIdx >= 1 && nextSvcIdx <= 7
-      ? clamp01(remap(localT, TL_TEXT.FADE_IN_START, TL_TEXT.FADE_IN_END))
-      : 0;
-
-  /* ── Y translation (subtle vertical slide) ────────────────────────────── */
-
-  const prevTextY =
-    -remap(localT, TL_TEXT.FADE_OUT_START, TL_TEXT.FADE_OUT_END) * DRIFT_PX;
-
-  const nextTextY =
-    (1 - remap(localT, TL_TEXT.FADE_IN_START, TL_TEXT.FADE_IN_END)) *
-    DRIFT_PX;
-
-  /* ── Layout alternation ────────────────────────────────────────────────
-   *
+  /* Layout alternation:
    * Odd service index  (1, 3, 5, 7) → text LEFT,  model RIGHT
    * Even service index (2, 4, 6)    → text RIGHT, model LEFT
-   * ────────────────────────────────────────────────────────────────────── */
-  const prevIsLeft = prevSvcIdx >= 1 && prevSvcIdx % 2 === 1;
-  const nextIsLeft = nextSvcIdx % 2 === 1;
+   */
+  const isLeft = currentSvcIdx % 2 === 1;
 
-  /* ── Section data lookup ──────────────────────────────────────────────── */
-  const prevSection = SECTIONS[prevSvcIdx];
-  const nextSection = SECTIONS[nextSvcIdx];
-  const prevSkills  = SERVICE_SKILLS[prevSvcIdx] ?? [];
-  const nextSkills  = SERVICE_SKILLS[nextSvcIdx] ?? [];
+  /* Show only the current service text. No cross-dissolve, no model-based
+   * fade/slide. The text remains completely stationary in its assigned position.
+   */
+  const showCurrentText = isActive && currentSvcIdx >= 1 && currentSvcIdx <= 7;
+
+  /* Text opacity: 1 when its service section is active, 0 otherwise. */
+  const currentTextOpacity = showCurrentText ? 1 : 0;
+
+  /* No vertical or horizontal text translation. */
+  const textTranslateY = 0;
+
+  /* Section data lookup — only for the current service */
+  const currentSection = currentSvcIdx >= 1 && currentSvcIdx <= 7 ? SECTIONS[currentSvcIdx] : null;
+  const currentSkills  = currentSvcIdx >= 1 && currentSvcIdx <= 7 ? SERVICE_SKILLS[currentSvcIdx] ?? [] : [];
 
   return (
     <div
@@ -377,25 +305,15 @@ function StickyServicePanel({ scrollProgress }: StickyServicePanelProps) {
       aria-atomic="true"
     >
 
-      {/* ── Previous service text (cross-dissolves OUT) ────────────────── */}
-      {isActive && prevSvcIdx >= 1 && (
+      {/* Current service text — visible only when its section is active. */
+      /* No translateY, no opacity fade tied to model position.           */}
+      {showCurrentText && (
         <ServiceTextBlock
-          sectionData={prevSection}
-          skills={prevSkills}
-          isLeft={prevIsLeft}
-          opacity={prevTextOpacity}
-          translateY={prevTextY}
-        />
-      )}
-
-      {/* ── Entering service text (cross-dissolves IN) ─────────────────── */}
-      {isActive && nextSvcIdx >= 1 && nextSvcIdx <= 7 && (
-        <ServiceTextBlock
-          sectionData={nextSection}
-          skills={nextSkills}
-          isLeft={nextIsLeft}
-          opacity={nextTextOpacity}
-          translateY={nextTextY}
+          sectionData={currentSection!}
+          skills={currentSkills!}
+          isLeft={isLeft}
+          opacity={currentTextOpacity}
+          translateY={textTranslateY}
         />
       )}
 

@@ -29,7 +29,7 @@ export default function CameraRig({
   scrollProgress = 0,
   mousePosition = { x: 0, y: 0 },
 }: CameraRigProps) {
-  const { camera } = useThree();
+  const { camera, size } = useThree();
   const targetPos   = useRef(new THREE.Vector3(0, 0, 4.8));
   const targetLookAt = useRef(new THREE.Vector3(0, 0, 0));
 
@@ -41,16 +41,23 @@ export default function CameraRig({
 
     const finalX = FINAL_X[secIdx] ?? 0;
 
+    // Viewport-adaptive scaling: on narrow screens, center models and don't lean
+    const aspect = size.width / size.height;
+    const isMobile = aspect < 0.65;
+
+    const baseZ = isMobile ? 5.8 : 4.8;
+    const leanScale = isMobile ? 0 : 0.22;
+    const mouseScale = isMobile ? 0 : 0.12;
+
     // Camera leans gently toward the settled model position
-    // During transition (localT < 0.7) stay near center, then lean as model moves
-    const camLeanT   = Math.max(0, (localT - 0.68) / 0.20); // 0→1 during MOVE phase
-    const camX       = finalX * 0.22 * camLeanT;
+    const camLeanT   = Math.max(0, (localT - 0.68) / 0.20);
+    const camX       = finalX * leanScale * camLeanT;
 
     // Very subtle Z dolly — slight push in on transitions
-    const dollyZ = 4.8 - Math.sin(localT * Math.PI) * 0.15;
+    const dollyZ = baseZ - Math.sin(localT * Math.PI) * 0.15;
 
     targetPos.current.set(
-      camX + mousePosition.x * 0.12,
+      camX + mousePosition.x * mouseScale,
       mousePosition.y * 0.08,
       dollyZ
     );
