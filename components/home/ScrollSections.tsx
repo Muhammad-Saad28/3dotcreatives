@@ -260,43 +260,51 @@ function ServiceTextBlock({
 /* -------------------------------------------------------------------------- */
 /* STICKY SERVICE PANEL                                                       */
 /*                                                                            */
-/* Lives inside the 700vh container.  Computes which service text is         */
-/* currently visible purely from scrollProgress.                             */
+/* Lives inside the 700vh container. Computes which service text is           */
+/* visible continuously from scrollProgress to sync with 3D model phases.     */
 /* -------------------------------------------------------------------------- */
+
+function getServiceTextOpacity(i: number, rawProg: number) {
+  /*
+   * i is the service index (1 to 7).
+   * The 3D model for this service settles at (i - 1) + 0.80 to 0.95.
+   * It starts moving out to center at i + 0.10 to 0.30.
+   * Rotation (morphing) begins precisely at i + 0.30.
+   */
+  const fadeInStart = (i - 1) + 0.75;
+  const fadeInEnd = (i - 1) + 0.95;
+
+  const fadeOutStart = i + 0.10;
+  const fadeOutEnd = i + 0.30;
+
+  if (rawProg < fadeInStart) return 0;
+  
+  if (rawProg >= fadeInStart && rawProg < fadeInEnd) {
+    return (rawProg - fadeInStart) / (fadeInEnd - fadeInStart);
+  }
+  
+  if (rawProg >= fadeInEnd && rawProg < fadeOutStart) {
+    return 1;
+  }
+  
+  if (i === 7) {
+    /* Packaging (secIdx=7) has no next service, so it just holds. */
+    return 1;
+  }
+
+  if (rawProg >= fadeOutStart && rawProg < fadeOutEnd) {
+    return 1 - (rawProg - fadeOutStart) / (fadeOutEnd - fadeOutStart);
+  }
+  
+  return 0;
+}
 
 interface StickyServicePanelProps {
   scrollProgress: number;
 }
 
 function StickyServicePanel({ scrollProgress }: StickyServicePanelProps) {
-  /* Derive section index and local phase progress */
   const rawProg = scrollProgress * SECTION_COUNT;
-  const secIdx  = Math.min(9, Math.max(0, Math.floor(Math.min(rawProg, 9.9999))));
-  const isActive = secIdx >= 1 && secIdx <= 7;
-
-  /* Current service index — the text shown corresponds to this section */
-  const currentSvcIdx = secIdx;
-
-  /* Layout alternation:
-   * Odd service index  (1, 3, 5, 7) → text LEFT,  model RIGHT
-   * Even service index (2, 4, 6)    → text RIGHT, model LEFT
-   */
-  const isLeft = currentSvcIdx % 2 === 1;
-
-  /* Show only the current service text. No cross-dissolve, no model-based
-   * fade/slide. The text remains completely stationary in its assigned position.
-   */
-  const showCurrentText = isActive && currentSvcIdx >= 1 && currentSvcIdx <= 7;
-
-  /* Text opacity: 1 when its service section is active, 0 otherwise. */
-  const currentTextOpacity = showCurrentText ? 1 : 0;
-
-  /* No vertical or horizontal text translation. */
-  const textTranslateY = 0;
-
-  /* Section data lookup — only for the current service */
-  const currentSection = currentSvcIdx >= 1 && currentSvcIdx <= 7 ? SECTIONS[currentSvcIdx] : null;
-  const currentSkills  = currentSvcIdx >= 1 && currentSvcIdx <= 7 ? SERVICE_SKILLS[currentSvcIdx] ?? [] : [];
 
   return (
     <div
@@ -304,19 +312,28 @@ function StickyServicePanel({ scrollProgress }: StickyServicePanelProps) {
       aria-live="polite"
       aria-atomic="true"
     >
+      {[1, 2, 3, 4, 5, 6, 7].map((i) => {
+        const opacity = getServiceTextOpacity(i, rawProg);
+        
+        /* Optimization: don't mount text blocks that are completely invisible */
+        if (opacity === 0) return null;
 
-      {/* Current service text — visible only when its section is active. */
-      /* No translateY, no opacity fade tied to model position.           */}
-      {showCurrentText && (
-        <ServiceTextBlock
-          sectionData={currentSection!}
-          skills={currentSkills!}
-          isLeft={isLeft}
-          opacity={currentTextOpacity}
-          translateY={textTranslateY}
-        />
-      )}
+        /* Odd service index -> text LEFT, model RIGHT */
+        const isLeft = i % 2 === 1;
+        const sectionData = SECTIONS[i];
+        const skills = SERVICE_SKILLS[i] ?? [];
 
+        return (
+          <ServiceTextBlock
+            key={i}
+            sectionData={sectionData}
+            skills={skills}
+            isLeft={isLeft}
+            opacity={opacity}
+            translateY={0}
+          />
+        );
+      })}
     </div>
   );
 }
