@@ -258,7 +258,7 @@ function computeSectionState(
   let prevOpacity = 0;
   let prevScale = 1;
 
-  const dotsX = 0;
+  let dotsX = 0;
   let dotsY = TRANSITION_Y;
   let dotsRotY = 0;
   let dotsOpacity = 0;
@@ -594,31 +594,82 @@ function computeSectionState(
 
     const lastX = FINAL_X[7];
 
-    /*
-     * OUTRO — Packaging (mounted on nextRef for secIdx=8) exits.
-     * prevRef is null at secIdx>=8 (no incoming model).
-     */
-    dotsOpacity = 0;
-    dotsScale   = 0.001;
+    /* ---------------------- OUTRO PHASE DETECTION --------------------- */
+    let phase;
+    if (localT < TL.HOLD_END) phase = 'HOLD';
+    else if (localT < TL.MOVE_TO_CENTER_END) phase = 'MOVE_TO_CENTER';
+    else if (localT < TL.CENTER_TRANSFORM_END) phase = 'CENTER_TRANSFORM';
+    else phase = 'SETTLE';
+    /* -------------------------------------------------------------------- */
 
+    /* prevRef is null at secIdx>=8 (no incoming model). */
     prevOpacity = 0;
     prevScale   = 0.001;
 
-    if (localT < 0.40) {
+    switch (phase) {
+      case 'HOLD':
+        nextX = lastX;
+        nextY = MODEL_Y;
+        nextOpacity = 1;
+        nextScale = 1;
+        nextRotY = Math.PI * 2; // carries over from previous section's settle
 
-      const t = easeInQuart(remap(localT, 0, 0.40));
+        dotsX = 0;
+        dotsY = TRANSITION_Y;
+        dotsOpacity = 0;
+        dotsScale = 0.001;
+        dotsRotY = 0;
+        break;
 
-      nextX     = lastX + ((lastX > 0 ? EXIT_X : -EXIT_X) - lastX) * t;
-      nextY     = MODEL_Y;
-      nextOpacity = t < 0.75 ? 1 : 1 - remap(t, 0.75, 1);
-      nextScale = 1 - 0.25 * t;
+      case 'MOVE_TO_CENTER': {
+        const tCenter = easeInOutQuint(
+          remap(localT, TL.MOVE_TO_CENTER_START, TL.MOVE_TO_CENTER_END)
+        );
+        nextX = lastX * (1 - tCenter);
+        nextY = MODEL_Y;
+        nextOpacity = 1;
+        nextScale = 1;
+        nextRotY = Math.PI * 2;
 
-    } else {
+        dotsX = 0;
+        dotsY = TRANSITION_Y;
+        dotsOpacity = 0;
+        dotsScale = 0.001;
+        dotsRotY = 0;
+        break;
+      }
 
-      nextX     = lastX > 0 ? EXIT_X : -EXIT_X;
-      nextY     = MODEL_Y;
-      nextOpacity = 0;
-      nextScale = 0.001;
+      case 'CENTER_TRANSFORM': {
+        const tCross = remap(localT, TL.CENTER_TRANSFORM_START, TL.CENTER_TRANSFORM_END);
+        const rotY = (Math.PI * 2) + (tCross * Math.PI * 2);
+
+        nextX = 0;
+        nextY = MODEL_Y;
+        nextOpacity = 1 - tCross;
+        nextScale = 1;
+        nextRotY = rotY;
+
+        dotsX = 0;
+        dotsY = TRANSITION_Y;
+        dotsOpacity = tCross;
+        dotsScale = 0.5 + 0.5 * tCross;
+        dotsRotY = rotY;
+        break;
+      }
+
+      case 'SETTLE':
+        nextX = 0;
+        nextY = MODEL_Y;
+        nextOpacity = 0;
+        nextScale = 0.001;
+        nextRotY = 0;
+
+        dotsX = 0;
+        dotsY = TRANSITION_Y;
+        dotsOpacity = 1;
+        dotsScale = 1;
+        dotsRotY = Math.PI * 4;
+        break;
     }
 
     return {
@@ -639,6 +690,19 @@ function computeSectionState(
       nextRotY,
       nextOpacity,
       nextScale,
+    };
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* SECTION 9+ — SELECTED WORK / BEYOND                                     */
+  /* Dots settled, fully visible, completely static. No rotation.            */
+  /* ------------------------------------------------------------------------ */
+
+  if (secIdx >= 9) {
+    return {
+      prevX: 0, prevY: MODEL_Y, prevRotY: 0, prevOpacity: 0, prevScale: 0.001,
+      dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: 0, dotsOpacity: 1, dotsScale: 1,
+      nextX: 0, nextY: MODEL_Y, nextRotY: 0, nextOpacity: 0, nextScale: 0.001,
     };
   }
 

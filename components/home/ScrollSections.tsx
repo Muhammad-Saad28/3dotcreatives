@@ -288,7 +288,14 @@ function getServiceTextOpacity(i: number, rawProg: number) {
   }
   
   if (i === 7) {
-    /* Packaging (secIdx=7) has no next service, so it just holds. */
+    /* Packaging (secIdx=7) fades out during the outro (secIdx=8)
+     * as the model travels to the center to morph into dots. */
+    if (rawProg >= 8.10 && rawProg < 8.30) {
+      return 1 - (rawProg - 8.10) / 0.20;
+    }
+    if (rawProg >= 8.30) {
+      return 0;
+    }
     return 1;
   }
 
