@@ -279,7 +279,7 @@ function computeSectionState(
     /*
      * HERO DOTS HOLD — dots centered, visible.
      */
-    if (localT < 0.10) {
+    if (localT < 0.35) {
 
       dotsOpacity = 1;
       dotsScale = 1;
@@ -291,10 +291,10 @@ function computeSectionState(
     /*
      * DOTS ROTATE CONTINUOUSLY.
      */
-    else if (localT < TL.HERO_MODEL_APPEAR) {
+    else if (localT < 0.55) {
 
       const t = easeInOutQuint(
-        remap(localT, 0.10, TL.HERO_MODEL_APPEAR)
+        remap(localT, 0.35, 0.55)
       );
 
       dotsOpacity = 1;
@@ -316,10 +316,10 @@ function computeSectionState(
      * one object morphing into another at the same point in space.
      * After this point, dots are PERMANENTLY GONE.
      */
-    else if (localT < 0.65) {
+    else if (localT < 0.70) {
 
       const t = easeOutQuart(
-        remap(localT, TL.HERO_MODEL_APPEAR, 0.65)
+        remap(localT, 0.55, 0.70)
       );
 
       /*
@@ -328,6 +328,8 @@ function computeSectionState(
       dotsOpacity = 1 - t;
       dotsScale = 1 - 0.4 * t;
       dotsY = TRANSITION_Y;
+      // keep at 360 deg
+      dotsRotY = Math.PI * 2;
 
       /*
        * Web model appears at center (X=0) — same position as the dots.
@@ -348,7 +350,7 @@ function computeSectionState(
     else if (localT < 0.85) {
 
       const t = easeOutQuart(
-        remap(localT, 0.65, 0.85)
+        remap(localT, 0.70, 0.85)
       );
 
       dotsOpacity = 0;
@@ -701,7 +703,7 @@ function computeSectionState(
   if (secIdx >= 9) {
     return {
       prevX: 0, prevY: MODEL_Y, prevRotY: 0, prevOpacity: 0, prevScale: 0.001,
-      dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: 0, dotsOpacity: 1, dotsScale: 1,
+      dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: Math.PI * 4, dotsOpacity: 1, dotsScale: 1,
       nextX: 0, nextY: MODEL_Y, nextRotY: 0, nextOpacity: 0, nextScale: 0.001,
     };
   }

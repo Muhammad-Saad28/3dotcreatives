@@ -25,15 +25,31 @@ import gsap from "gsap";
 interface RevealSectionProps {
   children: ReactNode;
   className?: string;
+  trigger?: boolean;
 }
 
-function RevealSection({ children, className = "" }: RevealSectionProps) {
+function RevealSection({ children, className = "", trigger }: RevealSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [hasRevealed, setHasRevealed] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el || hasRevealed) return;
+
+    if (trigger !== undefined) {
+      if (trigger) {
+        setHasRevealed(true);
+        const elements = el.querySelectorAll('.reveal-item');
+        if (elements.length > 0) {
+          gsap.fromTo(
+            elements,
+            { opacity: 0, y: 40, filter: "blur(8px)" },
+            { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2, stagger: 0.15, ease: "power3.out" }
+          );
+        }
+      }
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -57,7 +73,7 @@ function RevealSection({ children, className = "" }: RevealSectionProps) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [hasRevealed]);
+  }, [hasRevealed, trigger]);
 
   return (
     <div ref={ref} className={className}>
@@ -368,8 +384,11 @@ interface ScrollSectionsProps {
 }
 
 export default function ScrollSections({
+  currentSection,
   scrollProgress,
 }: ScrollSectionsProps) {
+  const rawProg = scrollProgress * 10;
+
   return (
     <div className="relative z-10 w-full pointer-events-none">
 
@@ -377,10 +396,11 @@ export default function ScrollSections({
       {/* SECTION 0 — HERO                                                  */}
       {/* Normal document flow: the Three.js dots sit centred in the canvas */}
       {/* ================================================================= */}
-      <section
-        className="w-full h-screen flex items-center"
-        style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
-      >
+      <section className="w-full h-[150vh]">
+        <div
+          className="sticky top-0 w-full h-screen flex items-center"
+          style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
+        >
         <RevealSection className="pointer-events-auto w-full">
           <div className="flex justify-start">
             <div className="max-w-xl space-y-5 text-left ml-4 md:ml-12">
@@ -407,6 +427,7 @@ export default function ScrollSections({
             </div>
           </div>
         </RevealSection>
+        </div>
       </section>
 
       {/* ================================================================= */}
@@ -417,7 +438,7 @@ export default function ScrollSections({
       {/* renders whatever the scrollProgress says — always in sync with    */}
       {/* the Three.js model on the canvas layer above.                     */}
       {/* ================================================================= */}
-      <div style={{ height: "700vh" }}>
+      <div style={{ height: "1050vh" }}>
         <div
           style={{ position: "sticky", top: 0, height: "100vh" }}
           className="pointer-events-none"
@@ -429,11 +450,12 @@ export default function ScrollSections({
       {/* ================================================================= */}
       {/* SECTION 8 — ALL SERVICES                                          */}
       {/* ================================================================= */}
-      <section
-        className="w-full h-screen flex items-center"
-        style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
-      >
-        <RevealSection className="pointer-events-auto w-full">
+      <section className="w-full h-[150vh]">
+        <div
+          className="sticky top-0 w-full h-screen flex items-center"
+          style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
+        >
+        <RevealSection className="pointer-events-auto w-full" trigger={rawProg >= 8.5}>
           <div className="flex justify-center">
             <div className="max-w-lg space-y-4 text-center">
               <span className="reveal-item block opacity-0 text-xs uppercase tracking-widest font-mono text-rust-gold font-semibold">
@@ -455,16 +477,18 @@ export default function ScrollSections({
             </div>
           </div>
         </RevealSection>
+        </div>
       </section>
 
       {/* ================================================================= */}
       {/* SECTION 9 — SELECTED WORK                                         */}
       {/* ================================================================= */}
-      <section
-        className="w-full h-screen flex items-center"
-        style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
-      >
-        <RevealSection className="pointer-events-auto w-full">
+      <section className="w-full h-[150vh]">
+        <div
+          className="sticky top-0 w-full h-screen flex items-center"
+          style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
+        >
+        <RevealSection className="pointer-events-auto w-full" trigger={rawProg >= 9.2}>
           <div className="flex justify-center">
             <div className="max-w-xl space-y-5 text-center">
               <span className="reveal-item block opacity-0 text-xs uppercase tracking-widest font-mono text-olive/60 font-semibold">
@@ -492,6 +516,7 @@ export default function ScrollSections({
             </div>
           </div>
         </RevealSection>
+        </div>
       </section>
 
     </div>
