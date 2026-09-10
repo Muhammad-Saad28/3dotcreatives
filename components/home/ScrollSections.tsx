@@ -12,6 +12,7 @@
    -------------------------------------------------------------------------- */
 
 import { useRef, useEffect, useState, ReactNode } from "react";
+import gsap from "gsap";
 
 /* -------------------------------------------------------------------------- */
 /* HELPERS                                                                    */
@@ -28,33 +29,38 @@ interface RevealSectionProps {
 
 function RevealSection({ children, className = "" }: RevealSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [hasRevealed, setHasRevealed] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || hasRevealed) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
+          setHasRevealed(true);
+          
+          const elements = el.querySelectorAll('.reveal-item');
+          if (elements.length > 0) {
+            gsap.fromTo(
+              elements,
+              { opacity: 0, y: 40, filter: "blur(8px)" },
+              { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2, stagger: 0.15, ease: "power3.out" }
+            );
+          }
+          
           observer.unobserve(el);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.15 }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [hasRevealed]);
 
   return (
-    <div
-      ref={ref}
-      className={`transition-all duration-700 ease-out ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      } ${className}`}
-    >
+    <div ref={ref} className={className}>
       {children}
     </div>
   );
@@ -177,6 +183,10 @@ function ServiceTextBlock({
   opacity,
   translateY,
 }: ServiceTextBlockProps) {
+  // Compute smooth vertical drift and blur based on opacity
+  const yOffset = (1 - opacity) * 30; // Floats up as it fades in
+  const blurAmount = (1 - opacity) * 4;
+
   return (
     <div
       aria-hidden={opacity < 0.05}
@@ -188,9 +198,10 @@ function ServiceTextBlock({
         paddingLeft: "5vw",
         paddingRight: "5vw",
         opacity,
-        transform: `translateY(${translateY}px)`,
+        transform: `translateY(${yOffset}px)`,
+        filter: `blur(${blurAmount}px)`,
         /* willChange tells the GPU to composite this layer separately */
-        willChange: "opacity, transform",
+        willChange: "opacity, transform, filter",
         pointerEvents: opacity > 0.5 ? "auto" : "none",
       }}
     >
@@ -217,7 +228,7 @@ function ServiceTextBlock({
               </span>
             </div>
 
-            <h2 className="text-2xl md:text-4xl font-extrabold text-dark-olive tracking-tight leading-tight">
+            <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-br from-dark-olive to-olive">
               {sectionData.title}
             </h2>
 
@@ -225,7 +236,7 @@ function ServiceTextBlock({
               {sectionData.tagline}
             </p>
 
-            <div className="w-8 h-0.5 bg-rust-gold/50 rounded-full" />
+            <div className="w-8 h-0.5 bg-gradient-to-r from-rust-gold to-rust-gold/30 rounded-full" />
 
             <p className="text-sm text-dark-olive/70 leading-relaxed">
               {sectionData.desc}
@@ -235,7 +246,7 @@ function ServiceTextBlock({
               {skills.map((skill) => (
                 <span
                   key={skill}
-                  className="text-xs font-mono tracking-widest text-olive/70 uppercase border border-olive/20 rounded px-2.5 py-1 bg-beige/30"
+                  className="text-xs font-mono tracking-widest text-dark-olive/80 uppercase border border-white/30 rounded-full px-3 py-1.5 bg-white/20 backdrop-blur-md shadow-sm hover:scale-105 hover:bg-white/40 hover:shadow-md transition-all cursor-default"
                 >
                   {skill}
                 </span>
@@ -267,15 +278,15 @@ function ServiceTextBlock({
 function getServiceTextOpacity(i: number, rawProg: number) {
   /*
    * i is the service index (1 to 7).
-   * The 3D model for this service settles at (i - 1) + 0.80 to 0.95.
-   * It starts moving out to center at i + 0.10 to 0.30.
-   * Rotation (morphing) begins precisely at i + 0.30.
+   * The 3D model for this service settles at (i - 1) + 0.90 to 0.98.
+   * It starts moving out to center at i + 0.40 to 0.55.
+   * Rotation (morphing) begins precisely at i + 0.55.
    */
-  const fadeInStart = (i - 1) + 0.75;
+  const fadeInStart = (i - 1) + 0.85;
   const fadeInEnd = (i - 1) + 0.95;
 
-  const fadeOutStart = i + 0.10;
-  const fadeOutEnd = i + 0.30;
+  const fadeOutStart = i + 0.40;
+  const fadeOutEnd = i + 0.55;
 
   if (rawProg < fadeInStart) return 0;
   
@@ -289,11 +300,12 @@ function getServiceTextOpacity(i: number, rawProg: number) {
   
   if (i === 7) {
     /* Packaging (secIdx=7) fades out during the outro (secIdx=8)
-     * as the model travels to the center to morph into dots. */
-    if (rawProg >= 8.10 && rawProg < 8.30) {
-      return 1 - (rawProg - 8.10) / 0.20;
+     * as the model travels to the center to morph into dots.
+     * With new TL, move to center starts at 0.40. */
+    if (rawProg >= 8.40 && rawProg < 8.55) {
+      return 1 - (rawProg - 8.40) / 0.15;
     }
-    if (rawProg >= 8.30) {
+    if (rawProg >= 8.55) {
       return 0;
     }
     return 1;
@@ -372,18 +384,20 @@ export default function ScrollSections({
         <RevealSection className="pointer-events-auto w-full">
           <div className="flex justify-start">
             <div className="max-w-xl space-y-5 text-left ml-4 md:ml-12">
-              <span className="text-xs uppercase tracking-[0.35em] font-mono text-olive font-semibold">
+              <span className="reveal-item block opacity-0 text-xs uppercase tracking-[0.35em] font-mono text-olive font-semibold">
                 3DOTCREATIVES
               </span>
-              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-dark-olive leading-[1.0]">
+              <h1 className="reveal-item block opacity-0 text-5xl md:text-7xl font-extrabold tracking-tight text-dark-olive leading-[1.0]">
                 WE CREATE <br />
-                <span className="text-rust-gold font-bold">IDEAS THAT MOVE.</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rust-gold to-rust-gold/70 font-bold">
+                  IDEAS THAT MOVE.
+                </span>
               </h1>
-              <p className="text-base text-dark-olive/70 max-w-sm leading-relaxed">
+              <p className="reveal-item block opacity-0 text-base text-dark-olive/70 max-w-sm leading-relaxed">
                 Digital experiences, content and creative solutions built for
                 ambitious brands.
               </p>
-              <div className="pt-6 flex items-center gap-3">
+              <div className="reveal-item flex opacity-0 pt-6 items-center gap-3">
                 <div className="w-8 h-px bg-olive/40" />
                 <span className="text-xs font-mono text-olive/60 tracking-[0.3em] uppercase">
                   Scroll to Explore
@@ -422,17 +436,19 @@ export default function ScrollSections({
         <RevealSection className="pointer-events-auto w-full">
           <div className="flex justify-center">
             <div className="max-w-lg space-y-4 text-center">
-              <span className="text-xs uppercase tracking-widest font-mono text-rust-gold font-semibold">
+              <span className="reveal-item block opacity-0 text-xs uppercase tracking-widest font-mono text-rust-gold font-semibold">
                 08 — The Whole Picture
               </span>
-              <h2 className="text-5xl md:text-6xl font-extrabold tracking-tight text-dark-olive leading-tight">
+              <h2 className="reveal-item block opacity-0 text-5xl md:text-6xl font-extrabold tracking-tight text-dark-olive leading-tight">
                 EVERYTHING <br />
-                <span className="text-rust-gold font-bold">CONNECTS.</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rust-gold to-rust-gold/70 font-bold">
+                  CONNECTS.
+                </span>
               </h2>
-              <h3 className="text-lg font-mono text-olive/80 tracking-widest pt-1">
+              <h3 className="reveal-item block opacity-0 text-lg font-mono text-olive/80 tracking-widest pt-1">
                 IDEA. DESIGN. EXECUTION.
               </h3>
-              <p className="text-sm text-dark-olive/70 max-w-md mx-auto leading-relaxed pt-2">
+              <p className="reveal-item block opacity-0 text-sm text-dark-olive/70 max-w-md mx-auto leading-relaxed pt-2">
                 One creative direction across digital, content, technology and
                 growth.
               </p>
@@ -451,21 +467,23 @@ export default function ScrollSections({
         <RevealSection className="pointer-events-auto w-full">
           <div className="flex justify-center">
             <div className="max-w-xl space-y-5 text-center">
-              <span className="text-xs uppercase tracking-widest font-mono text-olive/60 font-semibold">
+              <span className="reveal-item block opacity-0 text-xs uppercase tracking-widest font-mono text-olive/60 font-semibold">
                 Portfolio
               </span>
-              <h2 className="text-5xl md:text-8xl font-extrabold tracking-tight text-dark-olive leading-none">
+              <h2 className="reveal-item block opacity-0 text-5xl md:text-8xl font-extrabold tracking-tight text-dark-olive leading-none">
                 SELECTED <br />
-                <span className="text-rust-gold font-bold">WORK</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rust-gold to-rust-gold/70 font-bold">
+                  WORK
+                </span>
               </h2>
-              <p className="text-sm text-dark-olive/70 max-w-sm mx-auto leading-relaxed">
+              <p className="reveal-item block opacity-0 text-sm text-dark-olive/70 max-w-sm mx-auto leading-relaxed">
                 Explore selected brand cases, high-converting platforms, and
                 strategic creative campaigns.
               </p>
-              <div className="pt-4">
+              <div className="reveal-item opacity-0 pt-4 flex justify-center">
                 <a
                   href="/portfolio"
-                  className="inline-flex items-center gap-2 px-8 py-3 bg-dark-olive text-cream text-xs tracking-[0.2em] uppercase font-semibold rounded-full hover:bg-olive transition-all duration-300 hover:scale-105"
+                  className="inline-flex items-center gap-2 px-8 py-3 bg-dark-olive text-cream text-xs tracking-[0.2em] uppercase font-semibold rounded-full hover:bg-olive hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                 >
                   View All Projects{" "}
                   <span className="text-rust-gold">→</span>
