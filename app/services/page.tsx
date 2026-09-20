@@ -1,13 +1,9 @@
-import type { Metadata } from "next";
+"use client";
+
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ServicesList from "@/components/services/ServicesList";
-
-export const metadata: Metadata = {
-  title: "Services — 3dotcreatives",
-  description:
-    "Web development, content creation, app development, digital marketing and more. 3dotcreatives delivers comprehensive creative solutions.",
-};
+import RevealSection from "@/components/ui/RevealSection";
 
 export default function ServicesPage() {
   return (
@@ -17,16 +13,18 @@ export default function ServicesPage() {
         {/* Hero */}
         <section className="pt-20 pb-16 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto text-center">
-            <p className="text-xs tracking-[0.3em] text-olive uppercase font-semibold mb-4">
-              What We Do
-            </p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-dark-olive leading-[1.05] tracking-tight">
-              OUR SERVICES
-            </h1>
-            <p className="mt-6 text-base sm:text-lg text-dark-olive/60 max-w-2xl mx-auto leading-relaxed">
-              Comprehensive creative solutions designed to elevate your brand
-              and drive measurable results.
-            </p>
+            <RevealSection>
+              <p className="reveal-item text-xs tracking-[0.3em] text-olive uppercase font-semibold mb-4">
+                What We Do
+              </p>
+              <h1 className="reveal-item text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-dark-olive leading-[1.05] tracking-tight">
+                OUR SERVICES
+              </h1>
+              <p className="reveal-item mt-6 text-base sm:text-lg text-dark-olive/60 max-w-2xl mx-auto leading-relaxed">
+                Comprehensive creative solutions designed to elevate your brand
+                and drive measurable results.
+              </p>
+            </RevealSection>
           </div>
         </section>
 
@@ -45,22 +43,22 @@ export default function ServicesPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-24 md:py-32 px-6 lg:px-8 bg-dark-olive">
+        <RevealSection className="py-24 md:py-32 px-6 lg:px-8 bg-dark-olive">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-cream mb-6 tracking-tight">
+            <h2 className="reveal-item text-3xl md:text-4xl lg:text-5xl font-bold text-cream mb-6 tracking-tight">
               Ready to get started?
             </h2>
-            <p className="text-beige/60 mb-10 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+            <p className="reveal-item text-beige/60 mb-10 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
               Let&apos;s discuss how we can help bring your vision to life.
             </p>
             <a
               href="/contact"
-              className="inline-flex px-8 py-4 bg-cream text-dark-olive text-xs tracking-[0.18em] uppercase font-bold rounded-full transition-all duration-300 hover:bg-rust-gold hover:text-cream hover:scale-105"
+              className="reveal-item inline-flex px-8 py-4 bg-cream text-dark-olive text-xs tracking-[0.18em] uppercase font-bold rounded-full transition-all duration-300 hover:bg-rust-gold hover:text-cream hover:scale-105 hover:shadow-lg hover:shadow-rust-gold/20"
             >
               START A PROJECT
             </a>
           </div>
-        </section>
+        </RevealSection>
       </main>
       <Footer />
     </>

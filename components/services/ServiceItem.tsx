@@ -17,7 +17,7 @@ export default function ServiceItem({
 }: ServiceItemProps) {
   return (
     <article
-      className="group border-t border-dark-olive/10 py-8 md:py-10 cursor-pointer transition-all duration-500"
+      className={`group border-t border-dark-olive/10 py-8 md:py-10 cursor-pointer transition-all duration-500 ${isActive ? "bg-dark-olive/[0.02]" : ""}`}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       onFocus={onHover}
@@ -29,14 +29,14 @@ export default function ServiceItem({
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 md:gap-8">
-          <span className="text-xs text-olive/40 font-mono w-8 shrink-0">
+          <span className={`text-xs font-mono w-8 shrink-0 transition-colors duration-500 ${isActive ? "text-rust-gold" : "text-olive/40"}`}>
             {service.number}
           </span>
           <h3
             className={`text-xl sm:text-2xl md:text-3xl font-bold transition-all duration-500 ${
               isActive
                 ? "text-dark-olive"
-                : "text-dark-olive/40"
+                : "text-dark-olive/40 group-hover:text-dark-olive/70"
             }`}
           >
             {service.title}
@@ -45,8 +45,8 @@ export default function ServiceItem({
         <span
           className={`text-lg transition-all duration-500 shrink-0 ${
             isActive
-              ? "opacity-100 text-olive"
-              : "opacity-0"
+              ? "opacity-100 text-rust-gold translate-x-0"
+              : "opacity-0 -translate-x-2"
           }`}
         >
           →
@@ -64,15 +64,16 @@ export default function ServiceItem({
           </p>
           <div className="grid grid-cols-2 gap-3 max-w-lg">
             {service.features.map((feature) => (
-              <div key={feature} className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-rust-gold shrink-0" />
-                <span className="text-sm text-dark-olive/45">{feature}</span>
+              <div key={feature} className="flex items-center gap-2 group/feature">
+                <div className="w-1.5 h-1.5 rounded-full bg-rust-gold shrink-0 group-hover/feature:scale-150 transition-transform duration-300" />
+                <span className="text-sm text-dark-olive/45 group-hover/feature:text-dark-olive/70 transition-colors duration-300">{feature}</span>
               </div>
             ))}
           </div>
           <div className="mt-6">
-            <span className="inline-flex items-center gap-2 px-6 py-3 bg-dark-olive text-cream text-sm tracking-[0.08em] rounded-full transition-all hover:bg-olive">
+            <span className="inline-flex items-center gap-2 px-6 py-3 bg-dark-olive text-cream text-sm tracking-[0.08em] rounded-full transition-all duration-300 hover:bg-rust-gold hover:scale-105 hover:shadow-lg hover:shadow-rust-gold/20 cursor-pointer">
               DISCUSS YOUR PROJECT
+              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </span>
           </div>
         </div>

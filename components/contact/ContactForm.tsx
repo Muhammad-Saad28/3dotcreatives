@@ -114,11 +114,11 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="text-center py-16" role="status">
+      <div className="text-center py-16 animate-fade-in-up" role="status">
         <div className="flex justify-center gap-2 mb-6">
-          <div className="w-3 h-3 rounded-full bg-olive" />
-          <div className="w-3 h-3 rounded-full bg-rust-gold" />
-          <div className="w-3 h-3 rounded-full bg-olive" />
+          <div className="w-3 h-3 rounded-full bg-olive animate-pulse" />
+          <div className="w-3 h-3 rounded-full bg-rust-gold animate-pulse" style={{ animationDelay: "0.2s" }} />
+          <div className="w-3 h-3 rounded-full bg-olive animate-pulse" style={{ animationDelay: "0.4s" }} />
         </div>
         <h3 className="text-2xl font-bold text-dark-olive mb-4">
           Message Sent!
@@ -133,10 +133,10 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
       {/* Name */}
-      <div>
+      <div className="group">
         <label
           htmlFor="name"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold"
+          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
         >
           Name *
         </label>
@@ -146,23 +146,23 @@ export default function ContactForm() {
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
           className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.name ? "border-red-500" : "border-dark-olive/15"
-          } text-dark-olive focus:border-olive focus:outline-none transition-colors text-sm`}
+            errors.name ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
+          } text-dark-olive focus:outline-none transition-colors duration-300 text-sm`}
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? "name-error" : undefined}
         />
         {errors.name && (
-          <p id="name-error" className="text-red-500 text-xs mt-1.5" role="alert">
+          <p id="name-error" className="text-red-500 text-xs mt-1.5 animate-fade-in-up" role="alert">
             {errors.name}
           </p>
         )}
       </div>
 
       {/* Email */}
-      <div>
+      <div className="group">
         <label
           htmlFor="email"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold"
+          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
         >
           Email *
         </label>
@@ -172,23 +172,23 @@ export default function ContactForm() {
           value={formData.email}
           onChange={(e) => handleChange("email", e.target.value)}
           className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.email ? "border-red-500" : "border-dark-olive/15"
-          } text-dark-olive focus:border-olive focus:outline-none transition-colors text-sm`}
+            errors.email ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
+          } text-dark-olive focus:outline-none transition-colors duration-300 text-sm`}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? "email-error" : undefined}
         />
         {errors.email && (
-          <p id="email-error" className="text-red-500 text-xs mt-1.5" role="alert">
+          <p id="email-error" className="text-red-500 text-xs mt-1.5 animate-fade-in-up" role="alert">
             {errors.email}
           </p>
         )}
       </div>
 
       {/* Phone */}
-      <div>
+      <div className="group">
         <label
           htmlFor="phone"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold"
+          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
         >
           Phone
         </label>
@@ -198,23 +198,23 @@ export default function ContactForm() {
           value={formData.phone}
           onChange={(e) => handleChange("phone", e.target.value)}
           className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.phone ? "border-red-500" : "border-dark-olive/15"
-          } text-dark-olive focus:border-olive focus:outline-none transition-colors text-sm`}
+            errors.phone ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
+          } text-dark-olive focus:outline-none transition-colors duration-300 text-sm`}
           aria-invalid={!!errors.phone}
           aria-describedby={errors.phone ? "phone-error" : undefined}
         />
         {errors.phone && (
-          <p id="phone-error" className="text-red-500 text-xs mt-1.5" role="alert">
+          <p id="phone-error" className="text-red-500 text-xs mt-1.5 animate-fade-in-up" role="alert">
             {errors.phone}
           </p>
         )}
       </div>
 
       {/* Company */}
-      <div>
+      <div className="group">
         <label
           htmlFor="company"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold"
+          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
         >
           Company
         </label>
@@ -223,15 +223,15 @@ export default function ContactForm() {
           id="company"
           value={formData.company}
           onChange={(e) => handleChange("company", e.target.value)}
-          className="w-full px-4 py-3 bg-transparent border-b border-dark-olive/15 text-dark-olive focus:border-olive focus:outline-none transition-colors text-sm"
+          className="w-full px-4 py-3 bg-transparent border-b border-dark-olive/15 focus:border-olive text-dark-olive focus:outline-none transition-colors duration-300 text-sm"
         />
       </div>
 
       {/* Service */}
-      <div>
+      <div className="group">
         <label
           htmlFor="service"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold"
+          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
         >
           Service *
         </label>
@@ -240,8 +240,8 @@ export default function ContactForm() {
           value={formData.service}
           onChange={(e) => handleChange("service", e.target.value)}
           className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.service ? "border-red-500" : "border-dark-olive/15"
-          } text-dark-olive focus:border-olive focus:outline-none transition-colors appearance-none text-sm`}
+            errors.service ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
+          } text-dark-olive focus:outline-none transition-colors duration-300 appearance-none text-sm`}
           aria-invalid={!!errors.service}
           aria-describedby={errors.service ? "service-error" : undefined}
         >
@@ -253,17 +253,17 @@ export default function ContactForm() {
           ))}
         </select>
         {errors.service && (
-          <p id="service-error" className="text-red-500 text-xs mt-1.5" role="alert">
+          <p id="service-error" className="text-red-500 text-xs mt-1.5 animate-fade-in-up" role="alert">
             {errors.service}
           </p>
         )}
       </div>
 
       {/* Message */}
-      <div>
+      <div className="group">
         <label
           htmlFor="message"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold"
+          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
         >
           Message *
         </label>
@@ -273,13 +273,13 @@ export default function ContactForm() {
           value={formData.message}
           onChange={(e) => handleChange("message", e.target.value)}
           className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.message ? "border-red-500" : "border-dark-olive/15"
-          } text-dark-olive focus:border-olive focus:outline-none transition-colors resize-none text-sm`}
+            errors.message ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
+          } text-dark-olive focus:outline-none transition-colors duration-300 resize-none text-sm`}
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}
         />
         {errors.message && (
-          <p id="message-error" className="text-red-500 text-xs mt-1.5" role="alert">
+          <p id="message-error" className="text-red-500 text-xs mt-1.5 animate-fade-in-up" role="alert">
             {errors.message}
           </p>
         )}
@@ -287,7 +287,7 @@ export default function ContactForm() {
 
       {/* Error message */}
       {status === "error" && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg animate-fade-in-up" role="alert">
           <p className="text-red-600 text-sm">{errorMessage}</p>
         </div>
       )}
@@ -296,9 +296,19 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full md:w-auto px-8 py-4 bg-dark-olive text-cream text-xs tracking-[0.12em] uppercase font-bold rounded-full transition-all duration-300 hover:bg-olive disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full md:w-auto px-8 py-4 bg-dark-olive text-cream text-xs tracking-[0.12em] uppercase font-bold rounded-full transition-all duration-300 hover:bg-olive hover:scale-105 hover:shadow-lg hover:shadow-olive/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
       >
-        {status === "loading" ? "SENDING..." : "SEND MESSAGE"}
+        {status === "loading" ? (
+          <span className="flex items-center gap-2">
+            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            SENDING...
+          </span>
+        ) : (
+          "SEND MESSAGE"
+        )}
       </button>
     </form>
   );

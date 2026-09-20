@@ -68,7 +68,7 @@ export default function Navbar() {
           <img
             src="/logo.png"
             alt="3dotcreatives"
-            className="h-22 w-auto object-contain"
+            className="h-22 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 
@@ -103,7 +103,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex items-center justify-center w-8 h-8 rounded-full text-dark-olive/35 hover:text-rust-gold hover:bg-dark-olive/5 transition-all duration-200"
+                className="flex items-center justify-center w-8 h-8 rounded-full text-dark-olive/35 hover:text-rust-gold hover:bg-dark-olive/5 hover:scale-110 transition-all duration-300"
               >
                 <Icon />
               </a>
@@ -116,7 +116,7 @@ export default function Navbar() {
           {/* CTA Button */}
           <Link
             href="/contact"
-            className="flex items-center px-6 py-2 bg-dark-olive text-cream text-[11px] tracking-[0.16em] uppercase font-bold hover:bg-rust-gold transition-all duration-300 active:scale-95"
+            className="flex items-center px-6 py-2 bg-dark-olive text-cream text-[11px] tracking-[0.16em] uppercase font-bold hover:bg-rust-gold hover:scale-105 transition-all duration-300 active:scale-95"
           >
             Start a Project
           </Link>
