@@ -89,12 +89,13 @@ function RevealSection({ children, className = "", trigger }: RevealSectionProps
 /* Skill tags shown for each service (keyed by section index 1–7) */
 const SERVICE_SKILLS: Record<number, string[]> = {
   1: ["React", "Next.js", "TypeScript", "Performance"],
-  2: ["iOS", "Android", "React Native", "UX Design"],
-  3: ["Photography", "Video", "Direction", "Editing"],
+  2: ["Photography", "Video", "Direction", "Editing"],
+  3: ["Studio Lighting", "Retouching", "Styling", "E-Commerce"],
   4: ["Strategy", "Reels", "Community", "Analytics"],
   5: ["SEO", "Paid Ads", "Email", "Data"],
   6: ["Local SEO", "GBP Posts", "Reviews", "Maps"],
   7: ["Branding", "Print", "Dielines", "Finishing"],
+  8: ["iOS", "Android", "React Native", "UX Design"],
 };
 
 const SECTIONS = [
@@ -114,16 +115,16 @@ const SECTIONS = [
   },
   /* 02 */ {
     num: "02",
-    title: "APP DEVELOPMENT",
-    tagline: "BUILD. LAUNCH. SCALE.",
-    desc: "Modern mobile applications built around useful experiences and scalable technology.",
+    title: "CONTENT CREATION",
+    tagline: "MAKE PEOPLE STOP AND LOOK.",
+    desc: "Photography, video and creative content designed to communicate brands through visual storytelling.",
     align: "right",
   },
   /* 03 */ {
     num: "03",
-    title: "CONTENT CREATION",
-    tagline: "MAKE PEOPLE STOP AND LOOK.",
-    desc: "Photography, video and creative content designed to communicate brands through visual storytelling.",
+    title: "PRODUCT SHOOT",
+    tagline: "SHOW IT. SELL IT.",
+    desc: "Professional product photography and videography that highlights every detail and makes your products impossible to ignore.",
     align: "left",
   },
   /* 04 */ {
@@ -156,13 +157,20 @@ const SECTIONS = [
   },
   /* 08 */ {
     num: "08",
+    title: "APP DEVELOPMENT",
+    tagline: "BUILD. LAUNCH. SCALE.",
+    desc: "Modern mobile applications built around useful experiences and scalable technology.",
+    align: "right",
+  },
+  /* 09 */ {
+    num: "09",
     title: "ALL SERVICES",
     tagline: "EVERYTHING CONNECTS.",
     desc: "One creative direction across digital, content, technology and growth.",
     align: "center",
   },
-  /* 09 */ {
-    num: "09",
+  /* 10 */ {
+    num: "10",
     title: "SELECTED WORK",
     tagline: "PORTFOLIO & SHOWCASE",
     desc: "Explore selected brand cases, high-converting platforms, and strategic creative campaigns.",
@@ -170,7 +178,7 @@ const SECTIONS = [
   },
 ] as const;
 
-const SECTION_COUNT = 10;
+const SECTION_COUNT = 11;
 
 /* -------------------------------------------------------------------------- */
 /* SERVICE TEXT BLOCK                                                         */
@@ -240,7 +248,7 @@ function ServiceTextBlock({
               </span>
               <div className="flex-1 h-px bg-rust-gold/20 max-w-[40px]" />
               <span className="text-xs font-mono tracking-widest text-olive/50 uppercase">
-                / 07
+                / 08
               </span>
             </div>
 
@@ -314,14 +322,14 @@ function getServiceTextOpacity(i: number, rawProg: number) {
     return 1;
   }
   
-  if (i === 7) {
-    /* Packaging (secIdx=7) fades out during the outro (secIdx=8)
+  if (i === 8) {
+    /* App Dev (secIdx=8) fades out during the outro (secIdx=9)
      * as the model travels to the center to morph into dots.
      * With new TL, move to center starts at 0.40. */
-    if (rawProg >= 8.40 && rawProg < 8.55) {
-      return 1 - (rawProg - 8.40) / 0.15;
+    if (rawProg >= 9.40 && rawProg < 9.55) {
+      return 1 - (rawProg - 9.40) / 0.15;
     }
-    if (rawProg >= 8.55) {
+    if (rawProg >= 9.55) {
       return 0;
     }
     return 1;
@@ -347,7 +355,7 @@ function StickyServicePanel({ scrollProgress }: StickyServicePanelProps) {
       aria-live="polite"
       aria-atomic="true"
     >
-      {[1, 2, 3, 4, 5, 6, 7].map((i) => {
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
         const opacity = getServiceTextOpacity(i, rawProg);
         
         /* Optimization: don't mount text blocks that are completely invisible */
@@ -438,7 +446,7 @@ export default function ScrollSections({
       {/* renders whatever the scrollProgress says — always in sync with    */}
       {/* the Three.js model on the canvas layer above.                     */}
       {/* ================================================================= */}
-      <div style={{ height: "1050vh" }}>
+      <div style={{ height: "1200vh" }}>
         <div
           style={{ position: "sticky", top: 0, height: "100vh" }}
           className="pointer-events-none"
@@ -455,11 +463,11 @@ export default function ScrollSections({
           className="sticky top-0 w-full h-screen flex items-center"
           style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
         >
-        <RevealSection className="pointer-events-auto w-full" trigger={rawProg >= 8.5}>
+        <RevealSection className="pointer-events-auto w-full" trigger={rawProg >= 9.85}>
           <div className="flex justify-center">
             <div className="max-w-lg space-y-4 text-center">
               <span className="reveal-item block opacity-0 text-xs uppercase tracking-widest font-mono text-rust-gold font-semibold">
-                08 — The Whole Picture
+                09 — The Whole Picture
               </span>
               <h2 className="reveal-item block opacity-0 text-5xl md:text-6xl font-extrabold tracking-tight text-dark-olive leading-tight">
                 EVERYTHING <br />
@@ -488,7 +496,7 @@ export default function ScrollSections({
           className="sticky top-0 w-full h-screen flex items-center"
           style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
         >
-        <RevealSection className="pointer-events-auto w-full" trigger={rawProg >= 9.2}>
+        <RevealSection className="pointer-events-auto w-full" trigger={rawProg >= 10.2}>
           <div className="flex justify-center">
             <div className="max-w-xl space-y-5 text-center">
               <span className="reveal-item block opacity-0 text-xs uppercase tracking-widest font-mono text-olive/60 font-semibold">

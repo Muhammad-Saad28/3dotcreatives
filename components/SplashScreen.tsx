@@ -12,7 +12,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const leftPanelRef = useRef<HTMLDivElement>(null);
   const rightPanelRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLHeadingElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
   const cleanupRef = useRef<gsap.Context | null>(null);
 
   const handleComplete = useCallback(() => {
@@ -74,12 +74,13 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
         className="splash-panel right-0 w-1/2"
       />
       <div ref={containerRef} className="fixed inset-0 z-[10000] flex items-center justify-center pointer-events-none">
-        <h1
-          ref={textRef}
-          className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-dark-olive tracking-tight select-none"
-        >
-          3dotcreatives
-        </h1>
+        <div ref={textRef} className="flex items-center gap-4 select-none">
+          <img
+            src="/logo.png"
+            alt="3dotcreatives"
+            className="w-75 h-75 md:w-80 md:h-80 object-contain"
+          />
+        </div>
       </div>
     </>
   );

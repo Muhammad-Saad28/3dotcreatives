@@ -38,7 +38,7 @@ const YoutubeIcon = () => (
 
 const socialLinks = [
   { href: "https://facebook.com", icon: FacebookIcon, label: "Facebook" },
-  { href: "https://instagram.com", icon: InstagramIcon, label: "Instagram" },
+  { href: "https://www.instagram.com/3dotcreativesagency", icon: InstagramIcon, label: "Instagram" },
   { href: "https://linkedin.com", icon: LinkedinIcon, label: "LinkedIn" },
   { href: "https://youtube.com", icon: YoutubeIcon, label: "YouTube" },
 ];
@@ -66,13 +66,13 @@ export default function Footer() {
             </p>
 
             <div className="flex flex-col gap-2.5 text-sm text-beige/75 mb-6">
-              <a href="mailto:hello@3dotcreatives.com" className="flex items-center gap-2.5 hover:text-cream transition-colors">
+              <a href="mailto:3dotcreativesagency@gmail.com" className="flex items-center gap-2.5 hover:text-cream transition-colors">
                 <Mail size={14} className="text-rust-gold shrink-0" />
-                <span>hello@3dotcreatives.com</span>
+                <span>3dotcreativesagency@gmail.com</span>
               </a>
-              <a href="tel:+923001234567" className="flex items-center gap-2.5 hover:text-cream transition-colors">
+              <a href="https://wa.me/923052288882" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 hover:text-cream transition-colors">
                 <Phone size={14} className="text-rust-gold shrink-0" />
-                <span>+92 300 123 4567</span>
+                <span>+92 305 228 8882</span>
               </a>
             </div>
 
@@ -139,8 +139,8 @@ export default function Footer() {
               <li className="flex items-start gap-2.5">
                 <MapPin size={14} className="text-rust-gold mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-cream block">Karachi, PK</span>
-                  <span>Phase 6, DHA, Karachi</span>
+                  <span className="text-cream block">Lahore, PK</span>
+                  <span>Gullberg-III, Lahore</span>
                 </div>
               </li>
               <li className="flex items-start gap-2.5">

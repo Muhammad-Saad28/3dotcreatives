@@ -11,6 +11,7 @@ interface CreativeSceneProps {
   scrollProgress?: number;
   hoveredService?: number | null;
   separated?: boolean;
+  splashDone?: boolean;
   className?: string;
 }
 
@@ -27,7 +28,7 @@ function isWebGLAvailable(): boolean {
   }
 }
 
-function SceneContent({ scrollProgress }: { scrollProgress: number }) {
+function SceneContent({ scrollProgress, splashDone }: { scrollProgress: number; splashDone: boolean }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
 
@@ -64,7 +65,7 @@ function SceneContent({ scrollProgress }: { scrollProgress: number }) {
         mousePosition={mousePosition}
       />
       <Lights />
-      <ServiceStage scrollProgress={scrollProgress} />
+      <ServiceStage scrollProgress={scrollProgress} splashDone={splashDone} />
       <FloatingParticles count={60} mobile={isMobile} />
     </>
   );
@@ -74,6 +75,7 @@ export default function CreativeScene({
   scrollProgress = 0,
   hoveredService = null,
   separated = false,
+  splashDone = false,
   className = "",
 }: CreativeSceneProps) {
   const [webGLAvailable, setWebGLAvailable] = useState(true);
@@ -119,7 +121,7 @@ export default function CreativeScene({
         style={{ background: "transparent" }}
       >
         <Suspense fallback={null}>
-          <SceneContent scrollProgress={effectiveProgress} />
+          <SceneContent scrollProgress={effectiveProgress} splashDone={splashDone} />
         </Suspense>
       </Canvas>
     </div>

@@ -21,7 +21,7 @@ export default function Home() {
     <>
       {/* 3D Canvas — always visible */}
       <div className="fixed inset-0 pointer-events-none z-[9999]">
-        <CreativeScene scrollProgress={scrollProgress} className="w-full h-full" />
+        <CreativeScene scrollProgress={scrollProgress} splashDone={splashDone} className="w-full h-full" />
       </div>
 
       <SplashScreen onComplete={() => setSplashDone(true)} />

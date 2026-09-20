@@ -35,16 +35,16 @@ export default function ContactPage() {
                     <p className="text-[11px] tracking-[0.2em] text-olive uppercase font-bold mb-2">
                       Email Us
                     </p>
-                    <a href="mailto:hello@3dotcreatives.com" className="text-lg font-medium text-dark-olive hover:text-rust-gold transition-colors">
-                      hello@3dotcreatives.com
+                    <a href="mailto:3dotcreativesagency@gmail.com" className="text-lg font-medium text-dark-olive hover:text-rust-gold transition-colors">
+                      3dotcreativesagency@gmail.com
                     </a>
                   </div>
                   <div>
                     <p className="text-[11px] tracking-[0.2em] text-olive uppercase font-bold mb-2">
                       Call Us
                     </p>
-                    <a href="tel:+923001234567" className="text-lg font-medium text-dark-olive hover:text-rust-gold transition-colors">
-                      +92 300 123 4567
+                    <a href="https://wa.me/923052288882" target="_blank" rel="noopener noreferrer" className="text-lg font-medium text-dark-olive hover:text-rust-gold transition-colors">
+                      +92 305 228 8882
                     </a>
                   </div>
                   <div>
@@ -52,7 +52,7 @@ export default function ContactPage() {
                       Our Studio
                     </p>
                     <p className="text-base text-dark-olive/70">
-                      Phase 6, DHA, Karachi, Pakistan
+                      Gullberg-III, Lahore, Pakistan
                     </p>
                   </div>
                 </div>

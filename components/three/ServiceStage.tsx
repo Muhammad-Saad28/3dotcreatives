@@ -16,7 +16,7 @@ preloadGlb("/models/Camera.glb");
 preloadGlb("/models/social media .glb");
 preloadGlb("/models/digital marketing.glb");
 preloadGlb("/models/GBP.glb");
-preloadGlb("/models/package.glb");
+preloadGlb("/models/packaging.glb");
 
 /* -------------------------------------------------------------------------- */
 /* SERVICE MODELS                                                             */
@@ -81,7 +81,7 @@ function GbpModel() {
 function PackagingModel() {
   return (
     <GlbModel
-      path="/models/package.glb"
+      path="/models/packaging.glb"
       targetSize={1.5}
     />
   );
@@ -95,13 +95,14 @@ const SERVICE_COMPONENTS: Record<number, React.FC> = {
   5: MarketingModel,
   6: GbpModel,
   7: PackagingModel,
+  8: AppDevModel,
 };
 
 /* -------------------------------------------------------------------------- */
 /* GLOBAL CONFIG                                                              */
 /* -------------------------------------------------------------------------- */
 
-const SECTION_COUNT = 10;
+const SECTION_COUNT = 11;
 
 /*
  * Final X positions.
@@ -113,15 +114,16 @@ const FINAL_X: Record<number, number> = {
   0: 0,
 
   1: 1.75,   // Web
-  2: -1.75,  // App
-  3: 1.75,   // Content
+  2: -1.75,  // Content Creation (product shoot)
+  3: 1.75,   // Content Creation
   4: -1.4,   // Social
   5: 1.75,   // Marketing
   6: -1.75,  // GBP
   7: 1.75,   // Packaging
+  8: -1.75,  // App Development
 
-  8: 0,
   9: 0,
+  10: 0,
 };
 
 /*
@@ -404,13 +406,13 @@ function computeSectionState(
   }
 
   /* ------------------------------------------------------------------------ */
-  /* SERVICE TRANSITIONS (secIdx 1–7)                                         */
+  /* SERVICE TRANSITIONS (secIdx 1–8)                                         */
   /* ------------------------------------------------------------------------ */
 
-  if (secIdx >= 1 && secIdx <= 7) {
+  if (secIdx >= 1 && secIdx <= 8) {
 
     const finalX = FINAL_X[secIdx];
-    const nextFinalX = secIdx < 7 ? FINAL_X[secIdx + 1] : finalX;
+    const nextFinalX = secIdx < 8 ? FINAL_X[secIdx + 1] : finalX;
 
     /* Dots are PERMANENTLY GONE after the hero phase (secIdx=0). */
     dotsOpacity = 0;
@@ -419,11 +421,11 @@ function computeSectionState(
     dotsRotY = 0;
 
     /* -------------------------------------------------------------------- */
-    /* Special case: last service (secIdx=7) has no next.                   */
-    /* Just hold the Packaging model in place for the entire section.       */
+    /* Special case: last service (secIdx=8) has no next.                   */
+    /* Just hold the App Dev model in place for the entire section.         */
     /* -------------------------------------------------------------------- */
 
-    if (secIdx === 7) {
+    if (secIdx === 8) {
 
       nextX       = finalX;
       nextY       = MODEL_Y;
@@ -592,9 +594,9 @@ function computeSectionState(
   /* OUTRO (secIdx >= 8)                                                      */
   /* ------------------------------------------------------------------------ */
 
-  if (secIdx >= 8) {
+  if (secIdx >= 9) {
 
-    const lastX = FINAL_X[7];
+    const lastX = FINAL_X[8];
 
     /* ---------------------- OUTRO PHASE DETECTION --------------------- */
     let phase;
@@ -696,11 +698,11 @@ function computeSectionState(
   }
 
   /* ------------------------------------------------------------------------ */
-  /* SECTION 9+ — SELECTED WORK / BEYOND                                     */
+  /* SECTION 10+ — SELECTED WORK / BEYOND                                    */
   /* Dots settled, fully visible, completely static. No rotation.            */
   /* ------------------------------------------------------------------------ */
 
-  if (secIdx >= 9) {
+  if (secIdx >= 10) {
     return {
       prevX: 0, prevY: MODEL_Y, prevRotY: 0, prevOpacity: 0, prevScale: 0.001,
       dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: Math.PI * 4, dotsOpacity: 1, dotsScale: 1,
@@ -778,8 +780,10 @@ function applyGroupOpacity(
 
 export default function ServiceStage({
   scrollProgress,
+  splashDone = false,
 }: {
   scrollProgress: number;
+  splashDone?: boolean;
 }) {
 
   const { size } = useThree();
@@ -841,6 +845,12 @@ export default function ServiceStage({
         localT,
         secIdx
       );
+
+    /* Hide dots during splash screen */
+    if (!splashDone) {
+      target.dotsOpacity = 0;
+      target.dotsScale = 0.001;
+    }
 
     /* ---------------------------------------------------------------------- */
     /* MOBILE ADJUSTMENTS                                                     */
@@ -1075,22 +1085,22 @@ export default function ServiceStage({
   /*
    * nextRef = currently settled (outgoing) model:
    *   secIdx=0 (hero):  Web GLB — receives the dots→Web transformation
-   *   secIdx=1..7:      that section's own GLB (settled model)
-   *   secIdx=8 (outro): Packaging GLB exiting the composition
-   *   secIdx>=9:        null
+   *   secIdx=1..8:      that section's own GLB (settled model)
+   *   secIdx=9 (outro): App Dev GLB exiting the composition
+   *   secIdx>=10:       null
    *
    * prevRef = incoming (next) model that appears at center and travels:
-   *   secIdx=1..6:      next section's GLB
+   *   secIdx=1..7:      next section's GLB
    *   otherwise:        null
    */
   const NextComp =
     secIdx === 0 ? SERVICE_COMPONENTS[1]
-    : secIdx >= 1 && secIdx <= 7 ? SERVICE_COMPONENTS[secIdx]
-    : secIdx === 8 ? SERVICE_COMPONENTS[7]
+    : secIdx >= 1 && secIdx <= 8 ? SERVICE_COMPONENTS[secIdx]
+    : secIdx === 9 ? SERVICE_COMPONENTS[8]
     : null;
 
   const PrevComp =
-    secIdx >= 1 && secIdx <= 6 ? SERVICE_COMPONENTS[secIdx + 1]
+    secIdx >= 1 && secIdx <= 7 ? SERVICE_COMPONENTS[secIdx + 1]
     : null;
 
   /* ------------------------------------------------------------------------ */

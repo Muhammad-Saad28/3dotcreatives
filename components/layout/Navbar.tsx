@@ -25,15 +25,15 @@ const LinkedinIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
 );
 
-const YoutubeIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><polyline points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+const WhatsappIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
 );
 
 const socialLinks = [
-  { href: "https://instagram.com", icon: InstagramIcon, label: "Instagram" },
+  { href: "https://www.instagram.com/3dotcreativesagency", icon: InstagramIcon, label: "Instagram" },
   { href: "https://facebook.com", icon: FacebookIcon, label: "Facebook" },
   { href: "https://linkedin.com", icon: LinkedinIcon, label: "LinkedIn" },
-  { href: "https://youtube.com", icon: YoutubeIcon, label: "YouTube" },
+  { href: "https://wa.me/923052288882", icon: WhatsappIcon, label: "WhatsApp" },
 ];
 
 export default function Navbar() {
@@ -57,7 +57,7 @@ export default function Navbar() {
           : "bg-cream/95 backdrop-blur-sm"
       }`}
     >
-      <div className="flex items-center justify-between h-[64px] max-w-7xl mx-auto w-full px-6 lg:px-8">
+      <div className="flex items-center justify-between h-[82px] max-w-7xl mx-auto w-full px-6 lg:px-8">
 
         {/* Logo */}
         <Link
@@ -65,14 +65,11 @@ export default function Navbar() {
           aria-label="3dotcreatives home"
           className="flex items-center gap-2 shrink-0 group"
         >
-          <div className="flex gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-dark-olive transition-transform hover:scale-125 duration-200" />
-            <div className="w-1.5 h-1.5 rounded-full bg-rust-gold transition-transform hover:scale-125 duration-200" />
-            <div className="w-1.5 h-1.5 rounded-full bg-olive transition-transform hover:scale-125 duration-200" />
-          </div>
-          <span className="text-[11px] font-extrabold tracking-[0.24em] text-dark-olive leading-none">
-            3DOTCREATIVES
-          </span>
+          <img
+            src="/logo.png"
+            alt="3dotcreatives"
+            className="h-22 w-auto object-contain"
+          />
         </Link>
 
         {/* Center navigation links */}
