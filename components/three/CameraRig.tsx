@@ -42,8 +42,7 @@ export default function CameraRig({
     const finalX = FINAL_X[secIdx] ?? 0;
 
     // Viewport-adaptive scaling: on narrow screens, center models and don't lean
-    const aspect = size.width / size.height;
-    const isMobile = aspect < 0.65;
+    const isMobile = size.width < 768;
 
     const baseZ = isMobile ? 5.8 : 4.8;
     const leanScale = isMobile ? 0 : 0.22;

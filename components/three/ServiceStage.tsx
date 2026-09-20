@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { useRouter } from "next/navigation";
 import { ThreeDotsGroup } from "./SceneObjects";
 import GlbModel from "./GlbModel";
 
@@ -34,67 +35,81 @@ function prefetchGlb(url: string) {
 /* -------------------------------------------------------------------------- */
 
 function WebDevModel() {
+  const router = useRouter();
   return (
     <GlbModel
       path="/models/web.glb"
       targetSize={1.8}
-      position={[0, -0.3, 0]}
+      position={[0, -0.55, 0]}
+      onClick={() => router.push('/services/web-development')}
     />
   );
 }
 
 function AppDevModel() {
+  const router = useRouter();
   return (
     <GlbModel
       path="/models/content creation.glb"
       targetSize={1.5}
+      onClick={() => router.push('/services/app-development')}
     />
   );
 }
 
 function ContentModel() {
+  const router = useRouter();
   return (
     <GlbModel
       path="/models/Camera.glb"
       targetSize={1.8}
+      onClick={() => router.push('/services/content-creation')}
     />
   );
 }
 
 function SocialModel() {
+  const router = useRouter();
   return (
     <GlbModel
       path="/models/social media.glb"
       targetSize={1.6}
       rotation={[0, Math.PI / 2, 0]}
+      onClick={() => router.push('/services/social-media')}
     />
   );
 }
 
 function MarketingModel() {
+  const router = useRouter();
   return (
     <GlbModel
       path="/models/digital marketing.glb"
       targetSize={1.5}
+      onClick={() => router.push('/services/digital-marketing')}
     />
   );
 }
 
 function GbpModel() {
+  const router = useRouter();
   return (
     <GlbModel
       path="/models/GBP.glb"
       targetSize={1.5}
       rotation={[0, Math.PI / 2, 0]}
+      onClick={() => router.push('/services/gbp-management')}
     />
   );
 }
 
 function PackagingModel() {
+  const router = useRouter();
   return (
     <GlbModel
       path="/models/packaging.glb"
       targetSize={1.5}
+      onClick={() => router.push('/services/printing-packaging')}
     />
   );
 }
@@ -216,12 +231,17 @@ const TL = {
   HERO_MODEL_APPEAR: 0.50,
 
   /* Service transition phases (localT 0→1 within each section) */
-  HOLD_END: 0.0,
+  /*
+   * HOLD_END > 0 means the model holds at its settled position for
+   * the first 12% of each section before the transition begins.
+   * This is the 'still for 1 frame' dwell period.
+   */
+  HOLD_END: 0.18,
 
-  MOVE_TO_CENTER_START: 0.0,
-  MOVE_TO_CENTER_END: 0.25,
+  MOVE_TO_CENTER_START: 0.18,
+  MOVE_TO_CENTER_END: 0.38,
 
-  CENTER_TRANSFORM_START: 0.25,
+  CENTER_TRANSFORM_START: 0.38,
   CENTER_TRANSFORM_END: 0.65,
 
   MOVE_TO_OPPOSITE_START: 0.65,
@@ -884,17 +904,35 @@ export default function ServiceStage({
 
     /* ---------------------------------------------------------------------- */
     /* MOBILE ADJUSTMENTS                                                     */
-    /* On narrow screens: center models (reduce X) and push them down (Y+)    */
-    /* so text sits above the model instead of overlapping.                   */
+    /* Compress the desktop left/right swing to ±0.40 world units so the     */
+    /* alternating choreography is preserved but models stay on-screen.       */
+    /* A gentle float bob is added while the model is settled.                */
 
-    const aspect = size.width / size.height;
-    const isMobile = aspect < 0.65;
+    const isMobile = size.width < 768;
     if (isMobile) {
-      target.prevX = 0;
-      target.nextX = 0;
-      target.prevY += 0.8;
-      target.nextY += 0.8;
-      target.dotsY += 0.8;
+      /*
+       * Scale X: compress desktop ±1.75 swing to ±0.40 mobile swing.
+       * Factor ≈ 0.23. Clamp to ±0.45 as a safety rail.
+       * CENTER_TRANSFORM already sets X=0 so rotation stays central. ✓
+       */
+      const MOBILE_X_SCALE = 0.23;
+      target.prevX = THREE.MathUtils.clamp(target.prevX * MOBILE_X_SCALE, -0.45, 0.45);
+      target.nextX = THREE.MathUtils.clamp(target.nextX * MOBILE_X_SCALE, -0.45, 0.45);
+
+      // Place model in lower ~45% of viewport (negative Y = visually lower)
+      target.prevY = MODEL_Y - 1.1;
+      target.nextY = MODEL_Y - 1.1;
+      target.dotsY = TRANSITION_Y - 1.1;
+
+      // Gentle sine-wave float — model bobs subtly while settled
+      const floatY = Math.sin(state.clock.elapsedTime * 1.2) * 0.05;
+      target.nextY += floatY;
+      target.prevY += floatY;
+
+      // Slightly larger scale — model has room with tighter X swing
+      target.prevScale *= 0.78;
+      target.nextScale *= 0.78;
+      target.dotsScale *= 0.78;
     }
 
     /* ---------------------------------------------------------------------- */

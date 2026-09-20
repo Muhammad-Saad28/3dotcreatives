@@ -20,26 +20,26 @@ export default function Home() {
   return (
     <>
       {/* 3D Canvas — always visible */}
-      <div className="fixed inset-0 pointer-events-none z-[9999]">
+      <div className="fixed inset-0 z-[9999]">
         <CreativeScene scrollProgress={scrollProgress} splashDone={splashDone} className="w-full h-full" />
       </div>
 
       <SplashScreen onComplete={() => setSplashDone(true)} />
 
       <div
-        className={`relative z-[10001] transition-opacity duration-700 ${
+        className={`relative z-[10001] transition-opacity duration-700 pointer-events-none ${
           splashDone ? "opacity-100" : "opacity-0"
         }`}
       >
-        <Navbar />
-        <main className="flex-1">
+        <div className="pointer-events-auto"><Navbar /></div>
+        <main className="flex-1 pointer-events-none">
           <ScrollExperience
             activeSection={activeSection}
             scrollProgress={scrollProgress}
             onProgressChange={handleProgressChange}
           />
         </main>
-        <Footer />
+        <div className="pointer-events-auto"><Footer /></div>
       </div>
     </>
   );

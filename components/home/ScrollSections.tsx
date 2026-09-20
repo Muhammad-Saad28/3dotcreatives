@@ -218,7 +218,6 @@ function ServiceTextBlock({
         position: "absolute",
         inset: 0,
         display: "flex",
-        alignItems: "center",
         paddingLeft: "5vw",
         paddingRight: "5vw",
         opacity,
@@ -226,23 +225,25 @@ function ServiceTextBlock({
         filter: `blur(${blurAmount}px)`,
         /* willChange tells the GPU to composite this layer separately */
         willChange: "opacity, transform, filter",
-        pointerEvents: opacity > 0.5 ? "auto" : "none",
+        pointerEvents: "none",
       }}
+      className="items-start pt-[110px] md:items-center md:pt-0"
     >
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
 
         {/* ── TEXT column ─────────────────────────────────────────────── */}
         <div
-          className={`flex ${
+          className={`flex justify-center ${
             isLeft
-              ? "justify-start md:col-start-1"
-              : "justify-end md:col-start-2 md:row-start-1"
-          }`}
+              ? "md:justify-start md:col-start-1"
+              : "md:justify-end md:col-start-2 md:row-start-1"
+          } pointer-events-auto`}
+          style={{ pointerEvents: opacity > 0.5 ? "auto" : "none" }}
         >
-          <div className="space-y-6 max-w-sm">
+          <div className="space-y-4 md:space-y-6 max-w-[280px] md:max-w-sm text-center md:text-left">
 
             {/* number / divider */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 justify-center md:justify-start">
               <span className="text-xs font-mono tracking-[0.2em] text-rust-gold font-bold">
                 {sectionData.num}
               </span>
@@ -260,13 +261,13 @@ function ServiceTextBlock({
               {sectionData.tagline}
             </p>
 
-            <div className="w-8 h-0.5 bg-gradient-to-r from-rust-gold to-rust-gold/30 rounded-full" />
+            <div className="w-8 h-0.5 bg-gradient-to-r from-rust-gold to-rust-gold/30 rounded-full mx-auto md:mx-0" />
 
             <p className="text-sm text-dark-olive/70 leading-relaxed">
               {sectionData.desc}
             </p>
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3 pt-2 justify-center md:justify-start">
               {skills.map((skill) => (
                 <span
                   key={skill}
@@ -302,14 +303,15 @@ function ServiceTextBlock({
 function getServiceTextOpacity(i: number, rawProg: number) {
   /*
    * i is the service index (1 to 8).
-   * The 3D model for this service arrives during (i - 1) + 0.65 to 0.95.
-   * It starts moving out to center at i + 0.0 to 0.25.
+   * Text fades in as the model arrives, stays fully visible during the hold,
+   * then fades out as the model starts moving to center.
+   * fadeOutStart matches TL.HOLD_END (0.12) so text is visible during dwell.
    */
   const fadeInStart = (i - 1) + 0.65;
   const fadeInEnd = (i - 1) + 0.85;
 
-  const fadeOutStart = i + 0.05;
-  const fadeOutEnd = i + 0.25;
+  const fadeOutStart = i + 0.18;
+  const fadeOutEnd = i + 0.36;
 
   if (rawProg < fadeInStart) return 0;
   
@@ -437,12 +439,12 @@ export default function ScrollSections({
       {/* ================================================================= */}
       {/* SECTIONS 1–7 — SERVICES                                           */}
       {/*                                                                   */}
-      {/* 600vh container gives 1.5 scrolls per service for 8 services.     */}
+      {/* 520vh container gives 1.3 scrolls per service for 8 services.     */}
       {/* The inner sticky panel stays fixed at top: 0 throughout and       */}
       {/* renders whatever the scrollProgress says — always in sync with    */}
       {/* the Three.js model on the canvas layer above.                     */}
       {/* ================================================================= */}
-      <div style={{ height: "600vh" }}>
+      <div style={{ height: "520vh" }}>
         <div
           style={{ position: "sticky", top: 0, height: "100vh" }}
           className="pointer-events-none"

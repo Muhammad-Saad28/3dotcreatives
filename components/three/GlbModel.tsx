@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -9,6 +9,7 @@ interface GlbModelProps {
   targetSize?: number;
   rotation?: [number, number, number];
   position?: [number, number, number];
+  onClick?: () => void;
 }
 
 export default function GlbModel({
@@ -16,8 +17,21 @@ export default function GlbModel({
   targetSize = 1.6,
   rotation = [0, 0, 0],
   position = [0, 0, 0],
+  onClick,
 }: GlbModelProps) {
   const { scene } = useGLTF(path);
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    if (hovered && onClick) {
+      document.body.style.cursor = "pointer";
+    } else {
+      document.body.style.cursor = "auto";
+    }
+    return () => {
+      document.body.style.cursor = "auto";
+    };
+  }, [hovered, onClick]);
 
   const { clone, centerOffset, uniformScale } = useMemo(() => {
     const c = scene.clone(true);
@@ -76,7 +90,26 @@ export default function GlbModel({
   }, [scene, targetSize]);
 
   return (
-    <group position={position}>
+    <group
+      position={position}
+      onClick={(e) => {
+        if (onClick) {
+          e.stopPropagation();
+          onClick();
+        }
+      }}
+      onPointerOver={(e) => {
+        if (onClick) {
+          e.stopPropagation();
+          setHovered(true);
+        }
+      }}
+      onPointerOut={(e) => {
+        if (onClick) {
+          setHovered(false);
+        }
+      }}
+    >
       <group scale={uniformScale}>
         <group
           position={[

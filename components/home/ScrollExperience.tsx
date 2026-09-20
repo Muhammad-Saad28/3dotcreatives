@@ -52,7 +52,7 @@ export default function ScrollExperience({
         trigger: containerRef.current,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.45,
+        scrub: 0.35,
         onUpdate: (self) => {
           const rawProg = self.progress;
           const prog = mapPhysicalToLogical(rawProg);
@@ -68,7 +68,7 @@ export default function ScrollExperience({
   const isServiceSection = activeSection >= 1 && activeSection <= 8;
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen">
+    <div ref={containerRef} className="relative w-full min-h-screen pointer-events-none">
       {/* Minimal service progress indicator — only during service sections */}
       {isServiceSection && (
         <div className="fixed right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-2">

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { type Service } from "@/data/services";
 
 interface ServiceItemProps {
@@ -70,7 +71,15 @@ export default function ServiceItem({
               </div>
             ))}
           </div>
-          <div className="mt-6">
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <Link
+              href={`/services/${service.slug}`}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-dark-olive/70 hover:text-rust-gold transition-colors duration-300 group/link"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="accent-line-animated pb-0.5">Learn More</span>
+              <span className="transition-transform duration-300 group-hover/link:translate-x-1">→</span>
+            </Link>
             <span className="inline-flex items-center gap-2 px-6 py-3 bg-dark-olive text-cream text-sm tracking-[0.08em] rounded-full transition-all duration-300 hover:bg-rust-gold hover:scale-105 hover:shadow-lg hover:shadow-rust-gold/20 cursor-pointer">
               DISCUSS YOUR PROJECT
               <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>

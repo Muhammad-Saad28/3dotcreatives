@@ -1,5 +1,6 @@
 export interface Service {
   id: string;
+  slug: string;
   number: string;
   title: string;
   description: string;
@@ -9,6 +10,7 @@ export interface Service {
 export const services: Service[] = [
   {
     id: "web-development",
+    slug: "web-development",
     number: "01",
     title: "Web Development",
     description:
@@ -22,6 +24,7 @@ export const services: Service[] = [
   },
   {
     id: "content-creation",
+    slug: "content-creation",
     number: "02",
     title: "Content Creation",
     description:
@@ -35,6 +38,7 @@ export const services: Service[] = [
   },
   {
     id: "social-media",
+    slug: "social-media",
     number: "03",
     title: "Social Media Handling",
     description:
@@ -48,6 +52,7 @@ export const services: Service[] = [
   },
   {
     id: "app-development",
+    slug: "app-development",
     number: "04",
     title: "App Development",
     description:
@@ -61,6 +66,7 @@ export const services: Service[] = [
   },
   {
     id: "product-shoots",
+    slug: "product-shoot",
     number: "05",
     title: "Product Shoots & Management",
     description:
@@ -74,6 +80,7 @@ export const services: Service[] = [
   },
   {
     id: "gbp-management",
+    slug: "gbp-management",
     number: "06",
     title: "GBP Management",
     description:
@@ -87,6 +94,7 @@ export const services: Service[] = [
   },
   {
     id: "printing-packaging",
+    slug: "printing-packaging",
     number: "07",
     title: "Printing & Packaging",
     description:
@@ -100,6 +108,7 @@ export const services: Service[] = [
   },
   {
     id: "digital-marketing",
+    slug: "digital-marketing",
     number: "08",
     title: "Digital Marketing",
     description:

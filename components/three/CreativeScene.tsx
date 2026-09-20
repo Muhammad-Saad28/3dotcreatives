@@ -5,7 +5,6 @@ import { Canvas } from "@react-three/fiber";
 import CameraRig from "./CameraRig";
 import Lights from "./Lights";
 import ServiceStage from "./ServiceStage";
-import FloatingParticles from "./FloatingParticles";
 
 interface CreativeSceneProps {
   scrollProgress?: number;
@@ -66,7 +65,6 @@ function SceneContent({ scrollProgress, splashDone }: { scrollProgress: number; 
       />
       <Lights />
       <ServiceStage scrollProgress={scrollProgress} splashDone={splashDone} />
-      <FloatingParticles count={60} mobile={isMobile} />
     </>
   );
 }
