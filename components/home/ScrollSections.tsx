@@ -301,16 +301,15 @@ function ServiceTextBlock({
 
 function getServiceTextOpacity(i: number, rawProg: number) {
   /*
-   * i is the service index (1 to 7).
-   * The 3D model for this service settles at (i - 1) + 0.90 to 0.98.
-   * It starts moving out to center at i + 0.40 to 0.55.
-   * Rotation (morphing) begins precisely at i + 0.55.
+   * i is the service index (1 to 8).
+   * The 3D model for this service arrives during (i - 1) + 0.65 to 0.95.
+   * It starts moving out to center at i + 0.0 to 0.25.
    */
-  const fadeInStart = (i - 1) + 0.85;
-  const fadeInEnd = (i - 1) + 0.95;
+  const fadeInStart = (i - 1) + 0.65;
+  const fadeInEnd = (i - 1) + 0.85;
 
-  const fadeOutStart = i + 0.40;
-  const fadeOutEnd = i + 0.55;
+  const fadeOutStart = i + 0.05;
+  const fadeOutEnd = i + 0.25;
 
   if (rawProg < fadeInStart) return 0;
   
@@ -323,13 +322,10 @@ function getServiceTextOpacity(i: number, rawProg: number) {
   }
   
   if (i === 8) {
-    /* App Dev (secIdx=8) fades out during the outro (secIdx=9)
-     * as the model travels to the center to morph into dots.
-     * With new TL, move to center starts at 0.40. */
-    if (rawProg >= 9.40 && rawProg < 9.55) {
-      return 1 - (rawProg - 9.40) / 0.15;
+    if (rawProg >= 9.0 && rawProg < 9.25) {
+      return 1 - (rawProg - 9.0) / 0.25;
     }
-    if (rawProg >= 9.55) {
+    if (rawProg >= 9.25) {
       return 0;
     }
     return 1;
@@ -395,7 +391,7 @@ export default function ScrollSections({
   currentSection,
   scrollProgress,
 }: ScrollSectionsProps) {
-  const rawProg = scrollProgress * 10;
+  const rawProg = scrollProgress * 11;
 
   return (
     <div className="relative z-10 w-full pointer-events-none">
@@ -404,7 +400,7 @@ export default function ScrollSections({
       {/* SECTION 0 — HERO                                                  */}
       {/* Normal document flow: the Three.js dots sit centred in the canvas */}
       {/* ================================================================= */}
-      <section className="w-full h-[150vh]">
+      <section className="w-full h-[100vh]">
         <div
           className="sticky top-0 w-full h-screen flex items-center"
           style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
@@ -441,12 +437,12 @@ export default function ScrollSections({
       {/* ================================================================= */}
       {/* SECTIONS 1–7 — SERVICES                                           */}
       {/*                                                                   */}
-      {/* 700vh container gives scroll length for 7 service sections.       */}
+      {/* 600vh container gives 1.5 scrolls per service for 8 services.     */}
       {/* The inner sticky panel stays fixed at top: 0 throughout and       */}
       {/* renders whatever the scrollProgress says — always in sync with    */}
       {/* the Three.js model on the canvas layer above.                     */}
       {/* ================================================================= */}
-      <div style={{ height: "1200vh" }}>
+      <div style={{ height: "600vh" }}>
         <div
           style={{ position: "sticky", top: 0, height: "100vh" }}
           className="pointer-events-none"
@@ -458,7 +454,7 @@ export default function ScrollSections({
       {/* ================================================================= */}
       {/* SECTION 8 — ALL SERVICES                                          */}
       {/* ================================================================= */}
-      <section className="w-full h-[150vh]">
+      <section className="w-full h-[100vh]">
         <div
           className="sticky top-0 w-full h-screen flex items-center"
           style={{ paddingLeft: "5vw", paddingRight: "5vw" }}
@@ -491,7 +487,7 @@ export default function ScrollSections({
       {/* ================================================================= */}
       {/* SECTION 9 — SELECTED WORK                                         */}
       {/* ================================================================= */}
-      <section className="w-full h-[150vh]">
+      <section className="w-full h-[100vh]">
         <div
           className="sticky top-0 w-full h-screen flex items-center"
           style={{ paddingLeft: "5vw", paddingRight: "5vw" }}

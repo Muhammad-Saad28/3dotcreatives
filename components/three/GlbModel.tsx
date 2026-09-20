@@ -8,12 +8,14 @@ interface GlbModelProps {
   path: string;
   targetSize?: number;
   rotation?: [number, number, number];
+  position?: [number, number, number];
 }
 
 export default function GlbModel({
   path,
   targetSize = 1.6,
   rotation = [0, 0, 0],
+  position = [0, 0, 0],
 }: GlbModelProps) {
   const { scene } = useGLTF(path);
 
@@ -74,7 +76,7 @@ export default function GlbModel({
   }, [scene, targetSize]);
 
   return (
-    <group>
+    <group position={position}>
       <group scale={uniformScale}>
         <group
           position={[

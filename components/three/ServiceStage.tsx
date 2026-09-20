@@ -37,7 +37,8 @@ function WebDevModel() {
   return (
     <GlbModel
       path="/models/web.glb"
-      targetSize={2.0}
+      targetSize={1.8}
+      position={[0, -0.3, 0]}
     />
   );
 }
@@ -215,19 +216,19 @@ const TL = {
   HERO_MODEL_APPEAR: 0.50,
 
   /* Service transition phases (localT 0→1 within each section) */
-  HOLD_END: 0.40,
+  HOLD_END: 0.0,
 
-  MOVE_TO_CENTER_START: 0.40,
-  MOVE_TO_CENTER_END: 0.55,
+  MOVE_TO_CENTER_START: 0.0,
+  MOVE_TO_CENTER_END: 0.25,
 
-  CENTER_TRANSFORM_START: 0.55,
-  CENTER_TRANSFORM_END: 0.75,
+  CENTER_TRANSFORM_START: 0.25,
+  CENTER_TRANSFORM_END: 0.65,
 
-  MOVE_TO_OPPOSITE_START: 0.75,
-  MOVE_TO_OPPOSITE_END: 0.90,
+  MOVE_TO_OPPOSITE_START: 0.65,
+  MOVE_TO_OPPOSITE_END: 0.95,
 
-  SETTLE_START: 0.90,
-  SETTLE_END: 0.98,
+  SETTLE_START: 0.95,
+  SETTLE_END: 1.0,
 
   HOLD_FINAL: 1.0,
 } as const;
@@ -666,9 +667,9 @@ function computeSectionState(
 
         dotsX = 0;
         dotsY = TRANSITION_Y;
-        dotsOpacity = tCross;
-        dotsScale = 0.5 + 0.5 * tCross;
-        dotsRotY = rotY;
+        dotsOpacity = 0;
+        dotsScale = 0.001;
+        dotsRotY = 0;
         break;
       }
 
@@ -681,9 +682,9 @@ function computeSectionState(
 
         dotsX = 0;
         dotsY = TRANSITION_Y;
-        dotsOpacity = 1;
-        dotsScale = 1;
-        dotsRotY = Math.PI * 4;
+        dotsOpacity = 0;
+        dotsScale = 0.001;
+        dotsRotY = 0;
         break;
     }
 
@@ -716,7 +717,7 @@ function computeSectionState(
   if (secIdx >= 10) {
     return {
       prevX: 0, prevY: MODEL_Y, prevRotY: 0, prevOpacity: 0, prevScale: 0.001,
-      dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: Math.PI * 4, dotsOpacity: 1, dotsScale: 1,
+      dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: 0, dotsOpacity: 0, dotsScale: 0.001,
       nextX: 0, nextY: MODEL_Y, nextRotY: 0, nextOpacity: 0, nextScale: 0.001,
     };
   }
