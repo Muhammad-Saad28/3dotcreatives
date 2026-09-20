@@ -11,7 +11,6 @@ export default function Lights() {
         position={[5, 8, 5]}
         intensity={1.5}
         color="#F4EBDD"
-        castShadow
       />
 
       {/* Cool Rim/Fill Light (olive tone to accentuate object edges) */}

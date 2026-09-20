@@ -1,22 +1,33 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { ThreeDotsGroup } from "./SceneObjects";
-import GlbModel, { preloadGlb } from "./GlbModel";
+import GlbModel from "./GlbModel";
 
 /* -------------------------------------------------------------------------- */
-/* GLB PRELOADING                                                             */
+/* PROGRESSIVE PREFETCH — only load next model when user is mid-section       */
 /* -------------------------------------------------------------------------- */
 
-preloadGlb("/models/web.glb");
-preloadGlb("/models/content creation.glb");
-preloadGlb("/models/Camera.glb");
-preloadGlb("/models/social media .glb");
-preloadGlb("/models/digital marketing.glb");
-preloadGlb("/models/GBP.glb");
-preloadGlb("/models/packaging.glb");
+const SECTION_MODELS: Record<number, string> = {
+  1: "/models/web.glb",
+  2: "/models/content creation.glb",
+  3: "/models/Camera.glb",
+  4: "/models/social media.glb",
+  5: "/models/digital marketing.glb",
+  6: "/models/GBP.glb",
+  7: "/models/packaging.glb",
+  8: "/models/content creation.glb",
+};
+
+const fetched = new Set<string>();
+
+function prefetchGlb(url: string) {
+  if (fetched.has(url)) return;
+  fetched.add(url);
+  fetch(url).catch(() => {});
+}
 
 /* -------------------------------------------------------------------------- */
 /* SERVICE MODELS                                                             */
@@ -52,7 +63,7 @@ function ContentModel() {
 function SocialModel() {
   return (
     <GlbModel
-      path="/models/social media .glb"
+      path="/models/social media.glb"
       targetSize={1.6}
       rotation={[0, Math.PI / 2, 0]}
     />
@@ -817,6 +828,24 @@ export default function ServiceStage({
   });
 
   const prevSecIdx = useRef(-1);
+
+  /* ---------------------------------------------------------------------- */
+  /* PROGRESSIVE PREFETCH                                                   */
+  /* When ~30% into a section, start downloading the next model's GLB.      */
+  /* ---------------------------------------------------------------------- */
+
+  useEffect(() => {
+    const clamped = THREE.MathUtils.clamp(scrollProgress, 0, 0.9999);
+    const rawProgress = clamped * SECTION_COUNT;
+    const secIdx = Math.floor(rawProgress);
+    const localT = rawProgress - secIdx;
+
+    if (localT > 0.3) {
+      const nextIdx = secIdx + 1;
+      const nextUrl = SECTION_MODELS[nextIdx];
+      if (nextUrl) prefetchGlb(nextUrl);
+    }
+  }, [scrollProgress]);
 
   /* ------------------------------------------------------------------------ */
   /* FRAME LOOP                                                               */
