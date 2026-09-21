@@ -69,7 +69,7 @@ export default function Footer() {
                 Digital experiences, content and brands built to move people. Serving clients globally.
               </p>
 
-              <div className="reveal-item grid grid-cols-2 md:grid-cols-1 gap-2.5 text-sm text-beige/75 mb-6">
+              <div className="reveal-item flex flex-col gap-2.5 text-sm text-beige/75 mb-6">
                 <a href="mailto:3dotcreativesagency@gmail.com" className="flex items-center gap-2.5 hover:text-cream transition-colors duration-300 group">
                   <Mail size={14} className="text-rust-gold shrink-0 group-hover:scale-110 transition-transform duration-300" />
                   <span>3dotcreativesagency@gmail.com</span>
