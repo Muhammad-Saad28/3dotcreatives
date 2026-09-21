@@ -76,7 +76,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       <div ref={containerRef} className="fixed inset-0 z-[10000] flex items-center justify-center pointer-events-none">
         <div ref={textRef} className="flex items-center gap-4 select-none">
           <img
-            src="/logo.png"
+            src="/logo-splash.png"
             alt="3dotcreatives"
             className="w-75 h-75 md:w-80 md:h-80 object-contain"
           />

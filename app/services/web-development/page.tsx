@@ -61,18 +61,7 @@ export default function WebDevelopmentPage() {
   return (
     <>
       <Navbar />
-      <main className="flex-1 pt-24">
-        <RevealSection>
-          <div className="reveal-item">
-            <Link
-              href="/"
-              className="inline-block mb-8 px-4 py-2 text-olive hover:text-rust-gold transition-all duration-300 text-sm font-mono tracking-widest uppercase hover:bg-olive/5 rounded-full"
-            >
-              ← Back to Home
-            </Link>
-          </div>
-        </RevealSection>
-
+      <main className="flex-1 pt-24 bg-[#F4EBDD]">
         <ServicePageHero
           label="Web Development"
           title="Websites That Turn Ideas Into Experiences"

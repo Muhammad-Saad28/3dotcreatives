@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { Outfit } from "next/font/google";
+import ScrollToTop from "@/components/ui/ScrollToTop";
 import "./globals.css";
 
 const geist = Geist({
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} ${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-cream text-dark-olive font-sans">
+        <ScrollToTop />
         {children}
       </body>
     </html>

@@ -5,14 +5,14 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import RevealSection from "../ui/RevealSection";
 
 const footerServices = [
-  { href: "/services#web-development", label: "Web Development" },
-  { href: "/services#content-creation", label: "Content Creation" },
-  { href: "/services#social-media", label: "Social Media Handling" },
-  { href: "/services#app-development", label: "App Development" },
-  { href: "/services#product-shoots", label: "Product Shoots & Mgmt" },
-  { href: "/services#gbp-management", label: "GBP Management" },
-  { href: "/services#printing-packaging", label: "Printing & Packaging" },
-  { href: "/services#digital-marketing", label: "Digital Marketing" },
+  { href: "/services/web-development", label: "Web Development" },
+  { href: "/services/content-creation", label: "Content Creation" },
+  { href: "/services/social-media", label: "Social Media Handling" },
+  { href: "/services/app-development", label: "App Development" },
+  { href: "/services/product-shoots", label: "Product Shoots & Mgmt" },
+  { href: "/services/gbp-management", label: "GBP Management" },
+  { href: "/services/printing-packaging", label: "Printing & Packaging" },
+  { href: "/services/digital-marketing", label: "Digital Marketing" },
 ];
 
 const footerCompany = [
@@ -69,7 +69,7 @@ export default function Footer() {
                 Digital experiences, content and brands built to move people. Serving clients globally.
               </p>
 
-              <div className="reveal-item flex flex-col gap-2.5 text-sm text-beige/75 mb-6">
+              <div className="reveal-item grid grid-cols-2 md:grid-cols-1 gap-2.5 text-sm text-beige/75 mb-6">
                 <a href="mailto:3dotcreativesagency@gmail.com" className="flex items-center gap-2.5 hover:text-cream transition-colors duration-300 group">
                   <Mail size={14} className="text-rust-gold shrink-0 group-hover:scale-110 transition-transform duration-300" />
                   <span>3dotcreativesagency@gmail.com</span>
@@ -103,7 +103,7 @@ export default function Footer() {
               <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-beige/50 mb-6">
                 Services
               </h3>
-              <ul className="space-y-3">
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-1">
                 {footerServices.map((link) => (
                   <li key={link.href}>
                     <Link
@@ -124,7 +124,7 @@ export default function Footer() {
               <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-beige/50 mb-6">
                 Company
               </h3>
-              <ul className="space-y-3">
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-1">
                 {footerCompany.map((link) => (
                   <li key={link.href}>
                     <Link

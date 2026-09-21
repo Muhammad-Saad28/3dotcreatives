@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-cream: #F4EBDD;
+  --color-cream: #FDF6E3;
   --color-beige: #D8C3A5;
   --color-olive: #59613B;
   --color-rust-gold: #B98245;
@@ -12,12 +12,12 @@
 
 @layer base {
   :root {
-    --cream: #F4EBDD;
+    --cream: #FDF6E3;
     --beige: #D8C3A5;
     --olive: #59613B;
     --rust-gold: #B98245;
     --dark-olive: #303522;
-    --navy-950: #F4EBDD;
+    --navy-950: #FDF6E3;
     --navy-900: #efe5d6;
     --navy-800: #D8C3A5;
     --navy-700: #59613B;
@@ -25,13 +25,13 @@
     --navy-500: #59613B;
     --navy-400: #B98245;
     --sky-200: #D8C3A5;
-    --white: #F4EBDD;
+    --white: #FDF6E3;
     --muted: #D8C3A5;
     --panel: rgba(48, 53, 34, 0.08);
   }
 
   html {
-    background: #F4EBDD;
+    background: #FDF6E3;
     color: #303522;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
@@ -117,7 +117,7 @@
   }
 
   ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: #F4EBDD; }
+  ::-webkit-scrollbar-track { background: #FDF6E3; }
   ::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, #59613B, #B98245);
     border-radius: 999px;
@@ -229,6 +229,29 @@ html.lenis, html.lenis body { height: auto; }
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-20px) rotate(3deg); }
+}
+
+@keyframes serviceFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.service-card {
+  animation: serviceFloat 4s ease-in-out var(--desktop-delay, 0s) infinite;
+  transform-style: preserve-3d;
+}
+
+.service-card:hover {
+  animation: none;
+  transform: translateY(-500px) translateZ(60px) rotateX(5deg);
+  box-shadow: 0 100px 200px -30px rgba(0, 0, 0, 0.6), 0 60px 80px -30px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 639px) {
+  .service-card {
+    animation-delay: var(--mobile-delay, 0s);
+  }
 }
 
 @keyframes shimmer {

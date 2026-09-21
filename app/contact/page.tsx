@@ -14,52 +14,52 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <main className="flex-1 pt-24">
+      <main className="flex-1 pt-24 bg-[#FDF6E3]">
         <section className="py-20 md:py-28 px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
+          <div className="container-shell max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
               {/* Left column */}
               <RevealSection>
                 <div>
-                  <p className="reveal-item text-xs tracking-[0.3em] text-olive uppercase font-semibold mb-4">
+                  <p className="section-label mb-4">
                     Get In Touch
                   </p>
-                  <h1 className="reveal-item text-4xl sm:text-5xl md:text-6xl font-bold text-dark-olive leading-[1.05] tracking-tight">
-                    START A PROJECT
+                  <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-dark-olive leading-[1.05] tracking-tight">
+                    Start a Project
                   </h1>
-                  <p className="reveal-item mt-6 text-lg text-dark-olive/60 leading-relaxed max-w-lg">
+                  <p className="mt-6 text-lg text-dark-olive/70 font-medium leading-relaxed max-w-lg">
                     Tell us about your project. We&apos;ll get back to you within
                     24 hours with ideas and a timeline.
                   </p>
 
-                  <div className="reveal-item mt-12 space-y-8">
-                    <div className="group p-4 -mx-4 rounded-xl hover:bg-olive/5 transition-colors duration-300">
-                      <p className="text-[11px] tracking-[0.2em] text-olive uppercase font-bold mb-2">
+                  <div className="mt-16 space-y-10">
+                    <div className="group border-l-2 border-olive/20 pl-6 hover:border-olive transition-colors duration-300">
+                      <p className="text-[11px] tracking-[0.2em] text-dark-olive/50 uppercase font-bold mb-2">
                         Email Us
                       </p>
-                      <a href="mailto:3dotcreativesagency@gmail.com" className="text-lg font-medium text-dark-olive group-hover:text-rust-gold transition-colors duration-300">
+                      <a href="mailto:3dotcreativesagency@gmail.com" className="font-display text-xl sm:text-2xl font-bold text-dark-olive group-hover:text-olive transition-colors duration-300">
                         3dotcreativesagency@gmail.com
                       </a>
                     </div>
-                    <div className="group p-4 -mx-4 rounded-xl hover:bg-olive/5 transition-colors duration-300">
-                      <p className="text-[11px] tracking-[0.2em] text-olive uppercase font-bold mb-2">
+                    <div className="group border-l-2 border-olive/20 pl-6 hover:border-olive transition-colors duration-300">
+                      <p className="text-[11px] tracking-[0.2em] text-dark-olive/50 uppercase font-bold mb-2">
                         Call Us
                       </p>
-                      <a href="https://wa.me/923052288882" target="_blank" rel="noopener noreferrer" className="text-lg font-medium text-dark-olive group-hover:text-rust-gold transition-colors duration-300">
+                      <a href="https://wa.me/923052288882" target="_blank" rel="noopener noreferrer" className="font-display text-xl sm:text-2xl font-bold text-dark-olive group-hover:text-olive transition-colors duration-300">
                         +92 305 228 8882
                       </a>
                     </div>
-                    <div className="group p-4 -mx-4 rounded-xl hover:bg-olive/5 transition-colors duration-300">
-                      <p className="text-[11px] tracking-[0.2em] text-olive uppercase font-bold mb-2">
+                    <div className="group border-l-2 border-olive/20 pl-6 hover:border-olive transition-colors duration-300">
+                      <p className="text-[11px] tracking-[0.2em] text-dark-olive/50 uppercase font-bold mb-2">
                         Our Studio
                       </p>
-                      <p className="text-base text-dark-olive/70 group-hover:text-dark-olive transition-colors duration-300">
+                      <p className="font-display text-xl sm:text-2xl font-bold text-dark-olive group-hover:text-olive transition-colors duration-300">
                         Gullberg-III, Lahore, Pakistan
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex gap-2 mt-12">
+                  <div className="flex gap-2 mt-16">
                     <div className="w-2.5 h-2.5 rounded-full bg-olive animate-pulse" />
                     <div className="w-2.5 h-2.5 rounded-full bg-rust-gold animate-pulse" style={{ animationDelay: "0.2s" }} />
                     <div className="w-2.5 h-2.5 rounded-full bg-olive animate-pulse" style={{ animationDelay: "0.4s" }} />
@@ -69,7 +69,7 @@ export default function ContactPage() {
 
               {/* Right column - Form */}
               <RevealSection delay={0.2}>
-                <div className="reveal-item bg-cream/50 p-8 md:p-10 rounded-2xl border border-olive/10 shadow-lg shadow-dark-olive/5">
+                <div className="bg-dark-olive p-8 md:p-12 rounded-2xl border border-dark-olive/5 shadow-sm">
                   <ContactForm />
                 </div>
               </RevealSection>

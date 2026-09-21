@@ -27,36 +27,40 @@ export default function ProcessSteps({
       : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
 
   return (
-    <section className="py-16 md:py-24 px-6 lg:px-8 bg-dark-olive relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-gradient-to-br from-olive/10 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-gradient-to-tr from-rust-gold/10 to-transparent blur-3xl pointer-events-none" />
+    <section className="py-20 md:py-28 px-6 lg:px-8 bg-dark-olive relative overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-olive/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-olive/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative">
+      <div className="container-shell relative z-10">
         <RevealSection>
-          <p className="reveal-item section-label !text-beige/60">
-            {subtitle}
-          </p>
-          <h2 className="reveal-item section-title-light max-w-2xl mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-px w-12 bg-cream/20" />
+            <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-cream/50">
+              {subtitle}
+            </p>
+          </div>
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-cream leading-tight max-w-3xl mb-20" style={{ letterSpacing: "-0.02em" }}>
             {title}
           </h2>
         </RevealSection>
-        <div className={`grid ${gridCols} gap-8`}>
+
+        <div className={`grid ${gridCols} gap-0`}>
           {steps.map((item, index) => (
             <RevealSection key={item.step} delay={index * 0.1}>
-              <div className="reveal-item process-step group relative">
-                {/* Large background number */}
-                <span className="process-number text-5xl font-display font-bold text-rust-gold/20 group-hover:text-rust-gold/40 transition-all duration-500 block">
+              <div className="group relative pr-8 pb-10 border-l border-cream/10 pl-8 hover:border-olive transition-colors duration-500">
+                {/* Step number */}
+                <span className="font-display text-5xl font-bold text-cream/10 group-hover:text-olive/40 transition-colors duration-500 block mb-6">
                   {item.step}
                 </span>
 
-                {/* Accent line */}
-                <div className="w-8 h-0.5 bg-gradient-to-r from-rust-gold/40 to-transparent mt-4 mb-3 group-hover:w-12 transition-all duration-500" />
+                {/* Dot on the border */}
+                <div className="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-dark-olive border-2 border-cream/20 group-hover:border-olive group-hover:bg-olive transition-all duration-500" />
 
-                <h3 className="process-title text-xl font-bold text-cream group-hover:text-rust-gold transition-colors duration-300">
+                <h3 className="font-display text-xl font-bold text-cream mb-3 group-hover:text-olive transition-colors duration-300">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-beige/60 text-sm leading-relaxed group-hover:text-beige/80 transition-colors duration-300">
+                <p className="text-cream/50 text-sm leading-relaxed group-hover:text-cream/70 transition-colors duration-300">
                   {item.description}
                 </p>
               </div>

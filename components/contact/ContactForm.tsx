@@ -116,14 +116,14 @@ export default function ContactForm() {
     return (
       <div className="text-center py-16 animate-fade-in-up" role="status">
         <div className="flex justify-center gap-2 mb-6">
-          <div className="w-3 h-3 rounded-full bg-olive animate-pulse" />
+          <div className="w-3 h-3 rounded-full bg-cream animate-pulse" />
           <div className="w-3 h-3 rounded-full bg-rust-gold animate-pulse" style={{ animationDelay: "0.2s" }} />
-          <div className="w-3 h-3 rounded-full bg-olive animate-pulse" style={{ animationDelay: "0.4s" }} />
+          <div className="w-3 h-3 rounded-full bg-cream animate-pulse" style={{ animationDelay: "0.4s" }} />
         </div>
-        <h3 className="text-2xl font-bold text-dark-olive mb-4">
+        <h3 className="text-2xl font-bold text-cream mb-4">
           Message Sent!
         </h3>
-        <p className="text-dark-olive/55">
+        <p className="text-cream/55">
           Thank you for reaching out. We&apos;ll get back to you within 24 hours.
         </p>
       </div>
@@ -136,7 +136,7 @@ export default function ContactForm() {
       <div className="group">
         <label
           htmlFor="name"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
+          className="block text-[11px] tracking-[0.15em] text-cream/50 uppercase mb-2 font-bold group-focus-within:text-cream transition-colors duration-300"
         >
           Name *
         </label>
@@ -145,9 +145,9 @@ export default function ContactForm() {
           id="name"
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
-          className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.name ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
-          } text-dark-olive focus:outline-none transition-colors duration-300 text-sm`}
+          className={`w-full px-4 py-3 bg-cream/5 border-b ${
+            errors.name ? "border-red-400" : "border-cream/20 focus:border-cream"
+          } text-cream focus:outline-none transition-colors duration-300 text-sm placeholder:text-cream/30`}
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? "name-error" : undefined}
         />
@@ -162,7 +162,7 @@ export default function ContactForm() {
       <div className="group">
         <label
           htmlFor="email"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
+          className="block text-[11px] tracking-[0.15em] text-cream/50 uppercase mb-2 font-bold group-focus-within:text-cream transition-colors duration-300"
         >
           Email *
         </label>
@@ -171,9 +171,9 @@ export default function ContactForm() {
           id="email"
           value={formData.email}
           onChange={(e) => handleChange("email", e.target.value)}
-          className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.email ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
-          } text-dark-olive focus:outline-none transition-colors duration-300 text-sm`}
+          className={`w-full px-4 py-3 bg-cream/5 border-b ${
+            errors.email ? "border-red-400" : "border-cream/20 focus:border-cream"
+          } text-cream focus:outline-none transition-colors duration-300 text-sm placeholder:text-cream/30`}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? "email-error" : undefined}
         />
@@ -188,7 +188,7 @@ export default function ContactForm() {
       <div className="group">
         <label
           htmlFor="phone"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
+          className="block text-[11px] tracking-[0.15em] text-cream/50 uppercase mb-2 font-bold group-focus-within:text-cream transition-colors duration-300"
         >
           Phone
         </label>
@@ -197,9 +197,9 @@ export default function ContactForm() {
           id="phone"
           value={formData.phone}
           onChange={(e) => handleChange("phone", e.target.value)}
-          className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.phone ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
-          } text-dark-olive focus:outline-none transition-colors duration-300 text-sm`}
+          className={`w-full px-4 py-3 bg-cream/5 border-b ${
+            errors.phone ? "border-red-400" : "border-cream/20 focus:border-cream"
+          } text-cream focus:outline-none transition-colors duration-300 text-sm placeholder:text-cream/30`}
           aria-invalid={!!errors.phone}
           aria-describedby={errors.phone ? "phone-error" : undefined}
         />
@@ -214,7 +214,7 @@ export default function ContactForm() {
       <div className="group">
         <label
           htmlFor="company"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
+          className="block text-[11px] tracking-[0.15em] text-cream/50 uppercase mb-2 font-bold group-focus-within:text-cream transition-colors duration-300"
         >
           Company
         </label>
@@ -223,7 +223,7 @@ export default function ContactForm() {
           id="company"
           value={formData.company}
           onChange={(e) => handleChange("company", e.target.value)}
-          className="w-full px-4 py-3 bg-transparent border-b border-dark-olive/15 focus:border-olive text-dark-olive focus:outline-none transition-colors duration-300 text-sm"
+          className="w-full px-4 py-3 bg-cream/5 border-b border-cream/20 focus:border-cream text-cream focus:outline-none transition-colors duration-300 text-sm placeholder:text-cream/30"
         />
       </div>
 
@@ -231,7 +231,7 @@ export default function ContactForm() {
       <div className="group">
         <label
           htmlFor="service"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
+          className="block text-[11px] tracking-[0.15em] text-cream/50 uppercase mb-2 font-bold group-focus-within:text-cream transition-colors duration-300"
         >
           Service *
         </label>
@@ -239,15 +239,15 @@ export default function ContactForm() {
           id="service"
           value={formData.service}
           onChange={(e) => handleChange("service", e.target.value)}
-          className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.service ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
-          } text-dark-olive focus:outline-none transition-colors duration-300 appearance-none text-sm`}
+          className={`w-full px-4 py-3 bg-cream/5 border-b ${
+            errors.service ? "border-red-400" : "border-cream/20 focus:border-cream"
+          } text-cream focus:outline-none transition-colors duration-300 appearance-none text-sm`}
           aria-invalid={!!errors.service}
           aria-describedby={errors.service ? "service-error" : undefined}
         >
-          <option value="">Select a service</option>
+          <option value="" className="bg-dark-olive">Select a service</option>
           {services.map((s) => (
-            <option key={s.id} value={s.title}>
+            <option key={s.id} value={s.title} className="bg-dark-olive">
               {s.title}
             </option>
           ))}
@@ -263,7 +263,7 @@ export default function ContactForm() {
       <div className="group">
         <label
           htmlFor="message"
-          className="block text-[11px] tracking-[0.15em] text-dark-olive/50 uppercase mb-2 font-bold group-focus-within:text-olive transition-colors duration-300"
+          className="block text-[11px] tracking-[0.15em] text-cream/50 uppercase mb-2 font-bold group-focus-within:text-cream transition-colors duration-300"
         >
           Message *
         </label>
@@ -272,9 +272,9 @@ export default function ContactForm() {
           rows={5}
           value={formData.message}
           onChange={(e) => handleChange("message", e.target.value)}
-          className={`w-full px-4 py-3 bg-transparent border-b ${
-            errors.message ? "border-red-500" : "border-dark-olive/15 focus:border-olive"
-          } text-dark-olive focus:outline-none transition-colors duration-300 resize-none text-sm`}
+          className={`w-full px-4 py-3 bg-cream/5 border-b ${
+            errors.message ? "border-red-400" : "border-cream/20 focus:border-cream"
+          } text-cream focus:outline-none transition-colors duration-300 resize-none text-sm placeholder:text-cream/30`}
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "message-error" : undefined}
         />
@@ -296,7 +296,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full md:w-auto px-8 py-4 bg-dark-olive text-cream text-xs tracking-[0.12em] uppercase font-bold rounded-full transition-all duration-300 hover:bg-olive hover:scale-105 hover:shadow-lg hover:shadow-olive/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
+        className="w-full md:w-auto px-8 py-4 bg-cream text-dark-olive text-xs tracking-[0.12em] uppercase font-bold rounded-full transition-all duration-300 hover:bg-rust-gold hover:text-cream hover:scale-105 hover:shadow-lg hover:shadow-olive/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
       >
         {status === "loading" ? (
           <span className="flex items-center gap-2">

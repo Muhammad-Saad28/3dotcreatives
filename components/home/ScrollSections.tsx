@@ -5,10 +5,9 @@
    
    Architecture:
    - Hero, All Services, Selected Work remain in document flow (h-screen each)
-   - Services 1–7 live in one 700vh container with a 100vh sticky pinned panel
-   - The sticky panel renders the active service text driven purely by scrollProgress
+   - Services 1–8 live in one 520vh container with a 100vh sticky pinned panel
+   - The sticky panel renders the active service text + image driven by scrollProgress
    - Opacities and Y-offsets are computed from the same normalised progress value
-     that drives ServiceStage.tsx — no separate coordinate system, no desync
    -------------------------------------------------------------------------- */
 
 import { useRef, useEffect, useState, ReactNode } from "react";
@@ -96,6 +95,18 @@ const SERVICE_SKILLS: Record<number, string[]> = {
   6: ["Local SEO", "GBP Posts", "Reviews", "Maps"],
   7: ["Branding", "Print", "Dielines", "Finishing"],
   8: ["iOS", "Android", "React Native", "UX Design"],
+};
+
+/* 2D images for each service — place files in public/images/services/ */
+const SERVICE_IMAGES: Record<number, { src: string; alt: string }> = {
+  1: { src: "/images/services/web-development.jpg", alt: "Web Development" },
+  2: { src: "/images/services/content-creation.jpg", alt: "Content Creation" },
+  3: { src: "/images/services/product-shoot.jpg", alt: "Product Shoot" },
+  4: { src: "/images/services/social-media.jpg", alt: "Social Media" },
+  5: { src: "/images/services/digital-marketing.jpg", alt: "Digital Marketing" },
+  6: { src: "/images/services/gbp-management.jpg", alt: "GBP Management" },
+  7: { src: "/images/services/printing-packaging.jpg", alt: "Printing & Packaging" },
+  8: { src: "/images/services/app-development.jpg", alt: "App Development" },
 };
 
 const SECTIONS = [
@@ -194,10 +205,12 @@ type SectionDatum = (typeof SECTIONS)[number];
 interface ServiceTextBlockProps {
   sectionData: SectionDatum;
   skills: string[];
-  /** true → text left column, model right column */
+  /** true → text left column, image right column */
   isLeft: boolean;
   opacity: number;
   translateY: number;
+  imageSrc?: string;
+  imageAlt?: string;
 }
 
 function ServiceTextBlock({
@@ -206,9 +219,11 @@ function ServiceTextBlock({
   isLeft,
   opacity,
   translateY,
+  imageSrc,
+  imageAlt,
 }: ServiceTextBlockProps) {
   // Compute smooth vertical drift and blur based on opacity
-  const yOffset = (1 - opacity) * 30; // Floats up as it fades in
+  const yOffset = (1 - opacity) * 30;
   const blurAmount = (1 - opacity) * 4;
 
   return (
@@ -223,7 +238,6 @@ function ServiceTextBlock({
         opacity,
         transform: `translateY(${yOffset}px)`,
         filter: `blur(${blurAmount}px)`,
-        /* willChange tells the GPU to composite this layer separately */
         willChange: "opacity, transform, filter",
         pointerEvents: "none",
       }}
@@ -281,12 +295,23 @@ function ServiceTextBlock({
           </div>
         </div>
 
-        {/* ── MODEL column — intentionally empty; Three.js canvas above ─ */}
+        {/* ── IMAGE column ────────────────────────────────────────────── */}
         <div
-          className={
+          className={`flex items-center justify-center ${
             isLeft ? "col-start-2 row-start-1" : "col-start-1 row-start-1"
-          }
-        />
+          }`}
+        >
+          {imageSrc && (
+            <div className="relative w-full max-w-md aspect-[4/3] rounded-2xl overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg">
+              <img
+                src={imageSrc}
+                alt={imageAlt || sectionData.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          )}
+        </div>
 
       </div>
     </div>
@@ -372,6 +397,8 @@ function StickyServicePanel({ scrollProgress }: StickyServicePanelProps) {
             isLeft={isLeft}
             opacity={opacity}
             translateY={0}
+            imageSrc={SERVICE_IMAGES[i]?.src}
+            imageAlt={SERVICE_IMAGES[i]?.alt}
           />
         );
       })}
@@ -439,10 +466,9 @@ export default function ScrollSections({
       {/* ================================================================= */}
       {/* SECTIONS 1–7 — SERVICES                                           */}
       {/*                                                                   */}
-      {/* 520vh container gives 1.3 scrolls per service for 8 services.     */}
+      {/* 520vh container gives ~1.3 scrolls per service for 8 services.    */}
       {/* The inner sticky panel stays fixed at top: 0 throughout and       */}
-      {/* renders whatever the scrollProgress says — always in sync with    */}
-      {/* the Three.js model on the canvas layer above.                     */}
+      {/* renders the active service text + image driven by scrollProgress. */}
       {/* ================================================================= */}
       <div style={{ height: "520vh" }}>
         <div

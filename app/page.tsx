@@ -1,45 +1,43 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import ScrollExperience from "@/components/home/ScrollExperience";
 import SplashScreen from "@/components/SplashScreen";
-import CreativeScene from "@/components/three/CreativeScene";
+
+import HeroSection from "@/components/home/HeroSection";
+import WhyUsSection from "@/components/home/WhyUsSection";
+import ServicesSection from "@/components/home/ServicesSection";
+import AboutSection from "@/components/home/AboutSection";
+import PortfolioPreviewSection from "@/components/home/PortfolioPreviewSection";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
   const [splashDone, setSplashDone] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeSection, setActiveSection] = useState(0);
-
-  const handleProgressChange = useCallback((progress: number, section: number) => {
-    setScrollProgress(progress);
-    setActiveSection(section);
-  }, []);
 
   return (
     <>
-      {/* 3D Canvas — always visible */}
-      <div className="fixed inset-0 z-[9999]">
-        <CreativeScene scrollProgress={scrollProgress} splashDone={splashDone} className="w-full h-full" />
-      </div>
-
       <SplashScreen onComplete={() => setSplashDone(true)} />
 
       <div
-        className={`relative z-[10001] transition-opacity duration-700 pointer-events-none ${
+        className={`relative transition-opacity duration-700 ${
           splashDone ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="pointer-events-auto"><Navbar /></div>
-        <main className="flex-1 pointer-events-none">
-          <ScrollExperience
-            activeSection={activeSection}
-            scrollProgress={scrollProgress}
-            onProgressChange={handleProgressChange}
-          />
+        <Navbar />
+        
+        <main>
+          <HeroSection />
+          <ServicesSection />
+          <WhyUsSection />
+          <AboutSection />
+          <PortfolioPreviewSection />
+          <TestimonialsSection />
+          <CTASection />
         </main>
-        <div className="pointer-events-auto"><Footer /></div>
+        
+        <Footer />
       </div>
     </>
   );
