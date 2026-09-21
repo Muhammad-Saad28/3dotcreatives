@@ -41,13 +41,20 @@ export default function GlbModel({
 
       if (!mesh.isMesh || !mesh.material) return;
 
-      const materials = Array.isArray(mesh.material)
+      const srcMaterials = Array.isArray(mesh.material)
         ? mesh.material
         : [mesh.material];
 
-      materials.forEach((material) => {
-        material.transparent = true;
+      const clonedMaterials = srcMaterials.map((material) => {
+        const m = material.clone();
+        m.transparent = true;
+        m.opacity = 0;
+        return m;
       });
+
+      mesh.material = Array.isArray(mesh.material)
+        ? clonedMaterials
+        : clonedMaterials[0];
     });
 
     /*

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRouter } from "next/navigation";
@@ -8,30 +8,22 @@ import { ThreeDotsGroup } from "./SceneObjects";
 import GlbModel from "./GlbModel";
 
 /* -------------------------------------------------------------------------- */
-/* PROGRESSIVE PREFETCH — only load next model when user is mid-section       */
+/* MODEL PATHS                                                                */
 /* -------------------------------------------------------------------------- */
 
-const SECTION_MODELS: Record<number, string> = {
-  1: "/models/web.glb",
-  2: "/models/content creation.glb",
-  3: "/models/Camera.glb",
-  4: "/models/social media.glb",
-  5: "/models/digital marketing.glb",
-  6: "/models/GBP.glb",
-  7: "/models/packaging.glb",
-  8: "/models/content creation.glb",
-};
-
-const fetched = new Set<string>();
-
-function prefetchGlb(url: string) {
-  if (fetched.has(url)) return;
-  fetched.add(url);
-  fetch(url).catch(() => {});
-}
+const MODEL_PATHS = [
+  "/models/web.glb",
+  "/models/content creation.glb",
+  "/models/Camera.glb",
+  "/models/social media.glb",
+  "/models/digital marketing.glb",
+  "/models/GBP.glb",
+  "/models/packaging.glb",
+  "/models/content creation.glb",
+];
 
 /* -------------------------------------------------------------------------- */
-/* SERVICE MODELS                                                             */
+/* SERVICE MODEL WRAPPERS                                                     */
 /* -------------------------------------------------------------------------- */
 
 function WebDevModel() {
@@ -46,7 +38,7 @@ function WebDevModel() {
   );
 }
 
-function AppDevModel() {
+function ContentModel() {
   const router = useRouter();
   return (
     <GlbModel
@@ -57,7 +49,7 @@ function AppDevModel() {
   );
 }
 
-function ContentModel() {
+function CameraModel() {
   const router = useRouter();
   return (
     <GlbModel
@@ -116,13 +108,13 @@ function PackagingModel() {
 
 const SERVICE_COMPONENTS: Record<number, React.FC> = {
   1: WebDevModel,
-  2: AppDevModel,
-  3: ContentModel,
+  2: ContentModel,
+  3: CameraModel,
   4: SocialModel,
   5: MarketingModel,
   6: GbpModel,
   7: PackagingModel,
-  8: AppDevModel,
+  8: ContentModel,
 };
 
 /* -------------------------------------------------------------------------- */
@@ -131,43 +123,20 @@ const SERVICE_COMPONENTS: Record<number, React.FC> = {
 
 const SECTION_COUNT = 11;
 
-/*
- * Final X positions.
- *
- * Odd services  = RIGHT (model on right, text on left)
- * Even services = LEFT  (model on left, text on right)
- */
 const FINAL_X: Record<number, number> = {
   0: 0,
-
-  1: 1.75,   // Web
-  2: -1.75,  // Content Creation (product shoot)
-  3: 1.75,   // Content Creation
-  4: -1.4,   // Social
-  5: 1.75,   // Marketing
-  6: -1.75,  // GBP
-  7: 1.75,   // Packaging
-  8: -1.75,  // App Development
-
+  1: 1.75,
+  2: -1.75,
+  3: 1.75,
+  4: -1.4,
+  5: 1.75,
+  6: -1.75,
+  7: 1.75,
+  8: -1.75,
   9: 0,
   10: 0,
 };
 
-/*
- * IMPORTANT:
- * Make the exit distance large enough that the model completely leaves
- * the composition instead of stopping halfway.
- */
-const EXIT_X = 7.5;
-
-/*
- * Vertical positioning.
- * MODEL_Y is the visual center height - the model and text share the same
- * visual Y coordinate. Different GLBs have different internal origins, but
- * GLBModel.tsx already computes the visual bounding-box center via
- * Box3.setFromObject() and centerOffset negation, so the visual center
- * aligns with the text's visual band without random Y adjustments.
- */
 const MODEL_Y = 0.15;
 const TRANSITION_Y = MODEL_Y;
 
@@ -181,7 +150,6 @@ function clamp01(t: number) {
 
 function easeInOutQuint(t: number) {
   const c = clamp01(t);
-
   return c < 0.5
     ? 16 * c * c * c * c * c
     : 1 - Math.pow(-2 * c + 2, 5) / 2;
@@ -192,65 +160,25 @@ function easeOutQuart(t: number) {
   return 1 - Math.pow(1 - c, 4);
 }
 
-function easeInQuart(t: number) {
-  const c = clamp01(t);
-  return c * c * c * c;
-}
-
-function remap(
-  value: number,
-  min: number,
-  max: number
-) {
+function remap(value: number, min: number, max: number) {
   if (max === min) return 0;
-
-  return clamp01(
-    (value - min) / (max - min)
-  );
+  return clamp01((value - min) / (max - min));
 }
 
 /* -------------------------------------------------------------------------- */
 /* TIMELINE                                                                   */
 /* -------------------------------------------------------------------------- */
 
-/*
- * Service transition phases per section (localT 0→1).
- *
- * HOLD                : Model settled at current service side
- * MOVE_TO_CENTER      : Model travels from side toward center
- * CENTER_TRANSFORM    : Model at center, rotates and transforms into next GLB
- * MOVE_TO_OPPOSITE    : Model travels from center to opposite side
- * SETTLE              : Model settled opposite new service text
- * HOLD_FINAL          : Model held at settled position
- *
- * Hero phase (secIdx=0) handles dots → Web transformation,
- * after which dots are PERMANENTLY GONE.
- */
 const TL = {
-  /* Hero phase thresholds */
-  HERO_MODEL_APPEAR: 0.50,
-
-  /* Service transition phases (localT 0→1 within each section) */
-  /*
-   * HOLD_END > 0 means the model holds at its settled position for
-   * the first 12% of each section before the transition begins.
-   * This is the 'still for 1 frame' dwell period.
-   */
   HOLD_END: 0.18,
-
   MOVE_TO_CENTER_START: 0.18,
   MOVE_TO_CENTER_END: 0.38,
-
   CENTER_TRANSFORM_START: 0.38,
   CENTER_TRANSFORM_END: 0.65,
-
   MOVE_TO_OPPOSITE_START: 0.65,
   MOVE_TO_OPPOSITE_END: 0.95,
-
   SETTLE_START: 0.95,
   SETTLE_END: 1.0,
-
-  HOLD_FINAL: 1.0,
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -281,19 +209,15 @@ interface SectionState {
 /* SECTION TIMELINE                                                           */
 /* -------------------------------------------------------------------------- */
 
-function computeSectionState(
-  localT: number,
-  secIdx: number
-): SectionState {
-
+function computeSectionState(localT: number, secIdx: number): SectionState {
   let prevX = 0;
   let prevY = MODEL_Y;
   let prevRotY = 0;
   let prevOpacity = 0;
   let prevScale = 1;
 
-  let dotsX = 0;
-  let dotsY = TRANSITION_Y;
+  const dotsX = 0;
+  const dotsY = TRANSITION_Y;
   let dotsRotY = 0;
   let dotsOpacity = 0;
   let dotsScale = 1;
@@ -304,343 +228,154 @@ function computeSectionState(
   let nextOpacity = 0;
   let nextScale = 0.3;
 
-  /* ------------------------------------------------------------------------ */
-  /* HERO                                                                     */
-  /* ------------------------------------------------------------------------ */
-
+  /* HERO */
   if (secIdx === 0) {
-
-    /*
-     * HERO DOTS HOLD — dots centered, visible.
-     */
     if (localT < 0.35) {
-
       dotsOpacity = 1;
       dotsScale = 1;
-      dotsY = TRANSITION_Y;
-      dotsRotY = 0;
-
-    }
-
-    /*
-     * DOTS ROTATE CONTINUOUSLY.
-     */
-    else if (localT < 0.55) {
-
-      const t = easeInOutQuint(
-        remap(localT, 0.35, 0.55)
-      );
-
+    } else if (localT < 0.55) {
+      const t = easeInOutQuint(remap(localT, 0.35, 0.55));
       dotsOpacity = 1;
       dotsScale = 1;
-      dotsY = TRANSITION_Y;
-
-      /*
-       * TRUE FULL ROTATION — 360° spin.
-       */
       dotsRotY = Math.PI * 2 * t;
-
-    }
-
-    /*
-     * DOTS TRANSFORM INTO WEB MODEL AT CENTER.
-     *
-     * Dots fade/shrink while the Web model appears at the SAME central
-     * position (X=0). This makes the transformation feel physical —
-     * one object morphing into another at the same point in space.
-     * After this point, dots are PERMANENTLY GONE.
-     */
-    else if (localT < 0.70) {
-
-      const t = easeOutQuart(
-        remap(localT, 0.55, 0.70)
-      );
-
-      /*
-       * Dots disappear at center.
-       */
+    } else if (localT < 0.70) {
+      const t = easeOutQuart(remap(localT, 0.55, 0.70));
       dotsOpacity = 1 - t;
       dotsScale = 1 - 0.4 * t;
-      dotsY = TRANSITION_Y;
-      // keep at 360 deg
       dotsRotY = Math.PI * 2;
-
-      /*
-       * Web model appears at center (X=0) — same position as the dots.
-       * Grows slightly from half-size to full size as it takes over.
-       */
       nextX = 0;
       nextY = MODEL_Y;
       nextOpacity = t;
       nextScale = 0.5 + 0.5 * t;
-
-    }
-
-    /*
-     * WEB MODEL TRAVELS FROM CENTER TO ITS SETTLED POSITION.
-     *
-     * Dots are fully gone. Web GLB moves center → right side (FINAL_X[1]).
-     */
-    else if (localT < 0.85) {
-
-      const t = easeOutQuart(
-        remap(localT, 0.70, 0.85)
-      );
-
+    } else if (localT < 0.85) {
+      const t = easeOutQuart(remap(localT, 0.70, 0.85));
       dotsOpacity = 0;
       dotsScale = 0.001;
-      dotsY = TRANSITION_Y;
-      dotsRotY = 0;
-
       nextX = FINAL_X[1] * t;
       nextY = MODEL_Y;
       nextOpacity = 1;
       nextScale = 1;
-
-    }
-
-    /*
-     * DOTS ARE PERMANENTLY GONE. Web model holds settled.
-     */
-    else {
-
+    } else {
       dotsOpacity = 0;
       dotsScale = 0.001;
-      dotsY = TRANSITION_Y;
-      dotsRotY = 0;
-
       nextX = FINAL_X[1];
       nextY = MODEL_Y;
       nextOpacity = 1;
       nextScale = 1;
-      nextRotY = 0;
     }
-
-    return {
-      prevX,
-      prevY,
-      prevRotY,
-      prevOpacity,
-      prevScale,
-
-      dotsX,
-      dotsY,
-      dotsRotY,
-      dotsOpacity,
-      dotsScale,
-
-      nextX,
-      nextY,
-      nextRotY,
-      nextOpacity,
-      nextScale,
-    };
+    return { prevX, prevY, prevRotY, prevOpacity, prevScale,
+             dotsX, dotsY, dotsRotY, dotsOpacity, dotsScale,
+             nextX, nextY, nextRotY, nextOpacity, nextScale };
   }
 
-  /* ------------------------------------------------------------------------ */
-  /* SERVICE TRANSITIONS (secIdx 1–8)                                         */
-  /* ------------------------------------------------------------------------ */
-
+  /* SERVICE TRANSITIONS (secIdx 1–8) */
   if (secIdx >= 1 && secIdx <= 8) {
-
     const finalX = FINAL_X[secIdx];
     const nextFinalX = secIdx < 8 ? FINAL_X[secIdx + 1] : finalX;
 
-    /* Dots are PERMANENTLY GONE after the hero phase (secIdx=0). */
     dotsOpacity = 0;
     dotsScale = 0.001;
-    dotsY = TRANSITION_Y;
-    dotsRotY = 0;
-
-    /* -------------------------------------------------------------------- */
-    /* Special case: last service (secIdx=8) has no next.                   */
-    /* Just hold the App Dev model in place for the entire section.         */
-    /* -------------------------------------------------------------------- */
 
     if (secIdx === 8) {
-
-      nextX       = finalX;
-      nextY       = MODEL_Y;
+      nextX = finalX;
+      nextY = MODEL_Y;
       nextOpacity = 1;
-      nextScale   = 1;
-      nextRotY    = 0;
-
+      nextScale = 1;
       prevOpacity = 0;
-      prevScale   = 0.001;
-
-      return {
-        prevX, prevY, prevRotY, prevOpacity, prevScale,
-        dotsX, dotsY, dotsRotY, dotsOpacity, dotsScale,
-        nextX, nextY, nextRotY, nextOpacity, nextScale,
-      };
+      prevScale = 0.001;
+      return { prevX, prevY, prevRotY, prevOpacity, prevScale,
+               dotsX, dotsY, dotsRotY, dotsOpacity, dotsScale,
+               nextX, nextY, nextRotY, nextOpacity, nextScale };
     }
 
-    /* ---------------------- PHASE DETECTION --------------------- */
-    let phase;
+    let phase: string;
     if (localT < TL.HOLD_END) phase = 'HOLD';
     else if (localT < TL.MOVE_TO_CENTER_END) phase = 'MOVE_TO_CENTER';
     else if (localT < TL.CENTER_TRANSFORM_END) phase = 'CENTER_TRANSFORM';
     else if (localT < TL.MOVE_TO_OPPOSITE_END) phase = 'MOVE_TO_OPPOSITE';
-    else if (localT < TL.SETTLE_END) phase = 'SETTLE';
-    else phase = 'HOLD_FINAL';
-    /* -------------------------------------------------------------------- */
-
-    /*
-     * ROLE ASSIGNMENT:
-     *
-     * nextRef = current service's settled (outgoing) model.
-     * prevRef = next service's incoming model.
-     *
-     * HOLD:             nextRef at current side (opacity 1). prevRef hidden at destination.
-     * MOVE_TO_CENTER:   nextRef travels side → center. prevRef still hidden.
-     * CENTER_TRANSFORM: Both at X=0. nextRef fades 1→0, prevRef fades 0→1, same rotation.
-     *                   Feels like ONE object changing form at a fixed central point.
-     * MOVE_TO_OPPOSITE: nextRef invisible. prevRef travels center → destination side.
-     * SETTLE/HOLD_FINAL: nextRef invisible. prevRef settled at destination.
-     */
+    else phase = 'SETTLE';
 
     switch (phase) {
-
       case 'HOLD':
-        /* Current model (nextRef) settled opposite its service text. */
-        nextX       = finalX;
-        nextY       = MODEL_Y;
+        nextX = finalX;
+        nextY = MODEL_Y;
         nextOpacity = 1;
-        nextScale   = 1;
-        nextRotY    = 0;
-        /* Incoming model (prevRef) pre-positioned at destination, hidden. */
-        prevX       = nextFinalX;
-        prevY       = MODEL_Y;
+        nextScale = 1;
+        prevX = nextFinalX;
+        prevY = MODEL_Y;
         prevOpacity = 0;
-        prevScale   = 1;
-        prevRotY    = 0;
+        prevScale = 1;
         break;
 
       case 'MOVE_TO_CENTER': {
-        /* Current model travels from its settled side toward center. */
-        const tCenter = easeInOutQuint(
-          remap(localT, TL.MOVE_TO_CENTER_START, TL.MOVE_TO_CENTER_END)
-        );
-        nextX       = finalX * (1 - tCenter);
-        nextY       = MODEL_Y;
+        const tCenter = easeInOutQuint(remap(localT, TL.MOVE_TO_CENTER_START, TL.MOVE_TO_CENTER_END));
+        nextX = finalX * (1 - tCenter);
+        nextY = MODEL_Y;
         nextOpacity = 1;
-        nextScale   = 1;
-        nextRotY    = 0;
-        /* Incoming model still hidden at destination. */
-        prevX       = nextFinalX;
-        prevY       = MODEL_Y;
+        nextScale = 1;
+        prevX = nextFinalX;
+        prevY = MODEL_Y;
         prevOpacity = 0;
-        prevScale   = 1;
-        prevRotY    = 0;
+        prevScale = 1;
         break;
       }
 
       case 'CENTER_TRANSFORM': {
-        /*
-         * Both models at X=0 simultaneously.
-         * Current fades out while incoming fades in — both rotating at the
-         * same rate so it reads as ONE object physically changing form.
-         */
-        const tCross = remap(
-          localT,
-          TL.CENTER_TRANSFORM_START,
-          TL.CENTER_TRANSFORM_END
-        );
+        const tCross = remap(localT, TL.CENTER_TRANSFORM_START, TL.CENTER_TRANSFORM_END);
         const rotY = tCross * Math.PI * 2;
-
-        /* Current model: fades 1 → 0 at center while rotating. */
-        nextX       = 0;
-        nextY       = MODEL_Y;
+        nextX = 0;
+        nextY = MODEL_Y;
         nextOpacity = 1 - tCross;
-        nextScale   = 1;
-        nextRotY    = rotY;
-
-        /* Incoming model: fades 0 → 1 at center with the same rotation. */
-        prevX       = 0;
-        prevY       = MODEL_Y;
+        nextScale = 1;
+        nextRotY = rotY;
+        prevX = 0;
+        prevY = MODEL_Y;
         prevOpacity = tCross;
-        prevScale   = 1;
-        prevRotY    = rotY;
+        prevScale = 1;
+        prevRotY = rotY;
         break;
       }
 
       case 'MOVE_TO_OPPOSITE': {
-        /* Current model fully handed off — invisible. */
         nextOpacity = 0;
-        nextScale   = 0.001;
-        nextX       = 0;
-        nextY       = MODEL_Y;
-        nextRotY    = 0;
-
-        /* Incoming model travels from center to its destination side. */
-        const tOpp = easeOutQuart(
-          remap(localT, TL.MOVE_TO_OPPOSITE_START, TL.MOVE_TO_OPPOSITE_END)
-        );
-        prevX       = nextFinalX * tOpp;
-        prevY       = MODEL_Y;
+        nextScale = 0.001;
+        nextX = 0;
+        const tOpp = easeOutQuart(remap(localT, TL.MOVE_TO_OPPOSITE_START, TL.MOVE_TO_OPPOSITE_END));
+        prevX = nextFinalX * tOpp;
+        prevY = MODEL_Y;
         prevOpacity = 1;
-        prevScale   = 1;
-        prevRotY    = Math.PI * 2;
+        prevScale = 1;
+        prevRotY = Math.PI * 2;
         break;
       }
 
       case 'SETTLE':
-      case 'HOLD_FINAL':
-        /* Current model invisible. */
         nextOpacity = 0;
-        nextScale   = 0.001;
-        nextX       = 0;
-        nextY       = MODEL_Y;
-        nextRotY    = 0;
-        /* Incoming model settled at its destination. */
-        prevX       = nextFinalX;
-        prevY       = MODEL_Y;
+        nextScale = 0.001;
+        prevX = nextFinalX;
+        prevY = MODEL_Y;
         prevOpacity = 1;
-        prevScale   = 1;
-        prevRotY    = Math.PI * 2;
+        prevScale = 1;
+        prevRotY = Math.PI * 2;
         break;
     }
 
-    return {
-      prevX,
-      prevY,
-      prevRotY,
-      prevOpacity,
-      prevScale,
-
-      dotsX,
-      dotsY,
-      dotsRotY,
-      dotsOpacity,
-      dotsScale,
-
-      nextX,
-      nextY,
-      nextRotY,
-      nextOpacity,
-      nextScale,
-    };
+    return { prevX, prevY, prevRotY, prevOpacity, prevScale,
+             dotsX, dotsY, dotsRotY, dotsOpacity, dotsScale,
+             nextX, nextY, nextRotY, nextOpacity, nextScale };
   }
 
-  /* ------------------------------------------------------------------------ */
-  /* OUTRO (secIdx >= 8)                                                      */
-  /* ------------------------------------------------------------------------ */
-
-  if (secIdx >= 9) {
-
+  /* OUTRO (secIdx 9) */
+  if (secIdx === 9) {
     const lastX = FINAL_X[8];
-
-    /* ---------------------- OUTRO PHASE DETECTION --------------------- */
-    let phase;
+    let phase: string;
     if (localT < TL.HOLD_END) phase = 'HOLD';
     else if (localT < TL.MOVE_TO_CENTER_END) phase = 'MOVE_TO_CENTER';
     else if (localT < TL.CENTER_TRANSFORM_END) phase = 'CENTER_TRANSFORM';
     else phase = 'SETTLE';
-    /* -------------------------------------------------------------------- */
 
-    /* prevRef is null at secIdx>=8 (no incoming model). */
     prevOpacity = 0;
-    prevScale   = 0.001;
+    prevScale = 0.001;
 
     switch (phase) {
       case 'HOLD':
@@ -648,157 +383,134 @@ function computeSectionState(
         nextY = MODEL_Y;
         nextOpacity = 1;
         nextScale = 1;
-        nextRotY = Math.PI * 2; // carries over from previous section's settle
-
-        dotsX = 0;
-        dotsY = TRANSITION_Y;
-        dotsOpacity = 0;
-        dotsScale = 0.001;
-        dotsRotY = 0;
+        nextRotY = Math.PI * 2;
         break;
-
       case 'MOVE_TO_CENTER': {
-        const tCenter = easeInOutQuint(
-          remap(localT, TL.MOVE_TO_CENTER_START, TL.MOVE_TO_CENTER_END)
-        );
+        const tCenter = easeInOutQuint(remap(localT, TL.MOVE_TO_CENTER_START, TL.MOVE_TO_CENTER_END));
         nextX = lastX * (1 - tCenter);
         nextY = MODEL_Y;
         nextOpacity = 1;
         nextScale = 1;
         nextRotY = Math.PI * 2;
-
-        dotsX = 0;
-        dotsY = TRANSITION_Y;
-        dotsOpacity = 0;
-        dotsScale = 0.001;
-        dotsRotY = 0;
         break;
       }
-
       case 'CENTER_TRANSFORM': {
         const tCross = remap(localT, TL.CENTER_TRANSFORM_START, TL.CENTER_TRANSFORM_END);
         const rotY = (Math.PI * 2) + (tCross * Math.PI * 2);
-
         nextX = 0;
         nextY = MODEL_Y;
         nextOpacity = 1 - tCross;
         nextScale = 1;
         nextRotY = rotY;
-
-        dotsX = 0;
-        dotsY = TRANSITION_Y;
-        dotsOpacity = 0;
-        dotsScale = 0.001;
-        dotsRotY = 0;
+        dotsOpacity = tCross;
+        dotsScale = 0.5 + 0.5 * tCross;
         break;
       }
-
       case 'SETTLE':
-        nextX = 0;
-        nextY = MODEL_Y;
         nextOpacity = 0;
         nextScale = 0.001;
-        nextRotY = 0;
-
-        dotsX = 0;
-        dotsY = TRANSITION_Y;
-        dotsOpacity = 0;
-        dotsScale = 0.001;
-        dotsRotY = 0;
         break;
     }
 
-    return {
-      prevX,
-      prevY,
-      prevRotY,
-      prevOpacity,
-      prevScale,
-
-      dotsX,
-      dotsY,
-      dotsRotY,
-      dotsOpacity,
-      dotsScale,
-
-      nextX,
-      nextY,
-      nextRotY,
-      nextOpacity,
-      nextScale,
-    };
+    return { prevX, prevY, prevRotY, prevOpacity, prevScale,
+             dotsX, dotsY, dotsRotY, dotsOpacity, dotsScale,
+             nextX, nextY, nextRotY, nextOpacity, nextScale };
   }
 
-  /* ------------------------------------------------------------------------ */
-  /* SECTION 10+ — SELECTED WORK / BEYOND                                    */
-  /* Dots settled, fully visible, completely static. No rotation.            */
-  /* ------------------------------------------------------------------------ */
-
-  if (secIdx >= 10) {
-    return {
-      prevX: 0, prevY: MODEL_Y, prevRotY: 0, prevOpacity: 0, prevScale: 0.001,
-      dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: 0, dotsOpacity: 0, dotsScale: 0.001,
-      nextX: 0, nextY: MODEL_Y, nextRotY: 0, nextOpacity: 0, nextScale: 0.001,
-    };
-  }
-
-  /* ------------------------------------------------------------------------ */
-  /* FALLBACK                                                                 */
-  /* ------------------------------------------------------------------------ */
-
+  /* SECTION 10+ */
   return {
-    prevX,
-    prevY,
-    prevRotY,
-    prevOpacity,
-    prevScale,
-
-    dotsX,
-    dotsY,
-    dotsRotY,
-    dotsOpacity,
-    dotsScale,
-
-    nextX,
-    nextY,
-    nextRotY,
-    nextOpacity,
-    nextScale,
+    prevX: 0, prevY: MODEL_Y, prevRotY: 0, prevOpacity: 0, prevScale: 0.001,
+    dotsX: 0, dotsY: TRANSITION_Y, dotsRotY: 0, dotsOpacity: 0, dotsScale: 0.001,
+    nextX: 0, nextY: MODEL_Y, nextRotY: 0, nextOpacity: 0, nextScale: 0.001,
   };
 }
 
 /* -------------------------------------------------------------------------- */
-/* OPACITY / VISIBILITY                                                       */
+/* MODEL OPACITY MAPPING                                                      */
+/* Maps computeSectionState output to 7 persistent model groups.             */
 /* -------------------------------------------------------------------------- */
 
-function applyGroupOpacity(
-  group: THREE.Group | null,
-  alpha: number
-) {
+interface ModelTarget {
+  opacity: number;
+  x: number;
+  y: number;
+  rotY: number;
+  scale: number;
+}
 
-  if (!group) return;
+function mapModelTargets(
+  secIdx: number,
+  localT: number,
+  state: SectionState
+): ModelTarget[] {
+  const targets: ModelTarget[] = Array.from({ length: 8 }, () => ({
+    opacity: 0, x: 0, y: MODEL_Y, rotY: 0, scale: 1,
+  }));
 
-  const a = THREE.MathUtils.clamp(alpha, 0, 1);
-
-  if (a <= 0.01) {
-    group.visible = false;
-    return;
+  /* HERO (secIdx=0): dots → Web transition */
+  if (secIdx === 0) {
+    targets[0].opacity = state.nextOpacity;
+    targets[0].x = state.nextX;
+    targets[0].y = state.nextY;
+    targets[0].scale = state.nextScale;
+    return targets;
   }
 
-  group.visible = true;
+  /* SERVICE SECTIONS (secIdx 1–8) */
+  if (secIdx >= 1 && secIdx <= 8) {
+    const outgoing = secIdx;
+    const incoming = secIdx + 1;
 
+    /* Outgoing model: uses nextRef values */
+    if (outgoing >= 1 && outgoing <= 8) {
+      const i = outgoing - 1;
+      targets[i].opacity = state.nextOpacity;
+      targets[i].x = state.nextX;
+      targets[i].y = state.nextY;
+      targets[i].rotY = state.nextRotY;
+      targets[i].scale = state.nextScale;
+    }
+
+    /* Incoming model: uses prevRef values */
+    if (incoming >= 1 && incoming <= 8) {
+      const i = incoming - 1;
+      targets[i].opacity = state.prevOpacity;
+      targets[i].x = state.prevX;
+      targets[i].y = state.prevY;
+      targets[i].rotY = state.prevRotY;
+      targets[i].scale = state.prevScale;
+    }
+
+    return targets;
+  }
+
+  /* OUTRO (secIdx=9): App model exits, dots reappear */
+  if (secIdx === 9) {
+    /* App model (index 7) uses nextRef values */
+    targets[7].opacity = state.nextOpacity;
+    targets[7].x = state.nextX;
+    targets[7].y = state.nextY;
+    targets[7].rotY = state.nextRotY;
+    targets[7].scale = state.nextScale;
+    return targets;
+  }
+
+  /* SECTION 10+: all invisible */
+  return targets;
+}
+
+/* -------------------------------------------------------------------------- */
+/* OPACITY                                                                    */
+/* -------------------------------------------------------------------------- */
+
+function applyGroupOpacity(group: THREE.Group | null, alpha: number) {
+  if (!group) return;
+  const a = THREE.MathUtils.clamp(alpha, 0, 1);
   group.traverse((child) => {
-
     const mesh = child as THREE.Mesh;
-
     if (!mesh.isMesh || !mesh.material) return;
-
-    const materials = Array.isArray(mesh.material)
-      ? mesh.material
-      : [mesh.material];
-
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
     materials.forEach((material) => {
-
       material.transparent = true;
       material.opacity = a;
       material.needsUpdate = false;
@@ -817,392 +529,153 @@ export default function ServiceStage({
   scrollProgress: number;
   splashDone?: boolean;
 }) {
-
   const { size } = useThree();
   const floatRef = useRef<THREE.Group>(null);
   const dotsRef = useRef<THREE.Group>(null);
-  const prevRef = useRef<THREE.Group>(null);
-  const nextRef = useRef<THREE.Group>(null);
 
-  /*
-   * Smoothed animation values.
-   */
+  /* Persistent model refs — one per GLB, never unmounted */
+  const modelRefs = useRef<(THREE.Group | null)[]>([
+    null, null, null, null, null, null, null, null,
+  ]);
+  const ready = useRef(false);
+
   const sm = useRef({
-
-    prevX: 0,
-    prevY: MODEL_Y,
-    prevRotY: 0,
-    prevOp: 0,
-    prevSc: 1,
-
-    dotsX: 0,
-    dotsY: 0,
-    dotsRotY: 0,
-    dotsOp: 0,
-    dotsSc: 1,
-
-    nextX: 0,
-    nextY: MODEL_Y,
-    nextRotY: 0,
-    nextOp: 0,
-    nextSc: 0.3,
+    dotsX: 0, dotsY: 0, dotsRotY: 0, dotsOp: 0, dotsSc: 0.001,
+    modelOp: [0, 0, 0, 0, 0, 0, 0, 0],
+    modelX: [0, 0, 0, 0, 0, 0, 0, 0],
+    modelY: [MODEL_Y, MODEL_Y, MODEL_Y, MODEL_Y, MODEL_Y, MODEL_Y, MODEL_Y, MODEL_Y],
+    modelRotY: [0, 0, 0, 0, 0, 0, 0, 0],
+    modelSc: [0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001],
   });
 
   const prevSecIdx = useRef(-1);
 
   /* ---------------------------------------------------------------------- */
-  /* PROGRESSIVE PREFETCH                                                   */
-  /* When ~30% into a section, start downloading the next model's GLB.      */
+  /* FRAME LOOP                                                             */
   /* ---------------------------------------------------------------------- */
 
-  useEffect(() => {
+  useFrame((state, delta) => {
+    /* First frame: ensure nothing visible before useFrame controls it */
+    if (!ready.current) {
+      ready.current = true;
+      if (dotsRef.current) dotsRef.current.visible = false;
+      for (let i = 0; i < 8; i++) {
+        if (modelRefs.current[i]) modelRefs.current[i]!.visible = false;
+      }
+    }
+
     const clamped = THREE.MathUtils.clamp(scrollProgress, 0, 0.9999);
     const rawProgress = clamped * SECTION_COUNT;
     const secIdx = Math.floor(rawProgress);
     const localT = rawProgress - secIdx;
 
-    if (localT > 0.3) {
-      const nextIdx = secIdx + 1;
-      const nextUrl = SECTION_MODELS[nextIdx];
-      if (nextUrl) prefetchGlb(nextUrl);
-    }
-  }, [scrollProgress]);
+    const target = computeSectionState(localT, secIdx);
 
-  /* ------------------------------------------------------------------------ */
-  /* FRAME LOOP                                                               */
-  /* ------------------------------------------------------------------------ */
-
-  useFrame((state, delta) => {
-
-    const clamped =
-      THREE.MathUtils.clamp(
-        scrollProgress,
-        0,
-        0.9999
-      );
-
-    const rawProgress =
-      clamped * SECTION_COUNT;
-
-    const secIdx =
-      Math.floor(rawProgress);
-
-    const localT =
-      rawProgress - secIdx;
-
-    const target =
-      computeSectionState(
-        localT,
-        secIdx
-      );
-
-    /* Hide dots during splash screen */
     if (!splashDone) {
       target.dotsOpacity = 0;
       target.dotsScale = 0.001;
     }
 
-    /* ---------------------------------------------------------------------- */
-    /* MOBILE ADJUSTMENTS                                                     */
-    /* Compress the desktop left/right swing to ±0.40 world units so the     */
-    /* alternating choreography is preserved but models stay on-screen.       */
-    /* A gentle float bob is added while the model is settled.                */
-
+    /* MOBILE ADJUSTMENTS */
     const isMobile = size.width < 768;
     if (isMobile) {
-      /*
-       * Scale X: compress desktop ±1.75 swing to ±0.40 mobile swing.
-       * Factor ≈ 0.23. Clamp to ±0.45 as a safety rail.
-       * CENTER_TRANSFORM already sets X=0 so rotation stays central. ✓
-       */
       const MOBILE_X_SCALE = 0.23;
       target.prevX = THREE.MathUtils.clamp(target.prevX * MOBILE_X_SCALE, -0.45, 0.45);
       target.nextX = THREE.MathUtils.clamp(target.nextX * MOBILE_X_SCALE, -0.45, 0.45);
-
-      // Place model in lower ~45% of viewport (negative Y = visually lower)
       target.prevY = MODEL_Y - 1.1;
       target.nextY = MODEL_Y - 1.1;
       target.dotsY = TRANSITION_Y - 1.1;
-
-      // Gentle sine-wave float — model bobs subtly while settled
       const floatY = Math.sin(state.clock.elapsedTime * 1.2) * 0.05;
       target.nextY += floatY;
       target.prevY += floatY;
-
-      // Slightly larger scale — model has room with tighter X swing
       target.prevScale *= 0.78;
       target.nextScale *= 0.78;
       target.dotsScale *= 0.78;
     }
 
-    /* ---------------------------------------------------------------------- */
-    /* SECTION CHANGE                                                         */
-    /* ---------------------------------------------------------------------- */
-
+    /* SECTION CHANGE — snap position/rotation/scale, NOT opacity */
     if (secIdx !== prevSecIdx.current) {
-
-      /*
-       * Snap state at a section boundary.
-       *
-       * This prevents the previous section's opacity/position from leaking
-       * into the next service.
-       */
-      sm.current.prevX = target.prevX;
-      sm.current.prevY = target.prevY;
-      sm.current.prevRotY = target.prevRotY;
-      sm.current.prevOp = target.prevOpacity;
-      sm.current.prevSc = target.prevScale;
-
       sm.current.dotsX = target.dotsX;
       sm.current.dotsY = target.dotsY;
       sm.current.dotsRotY = target.dotsRotY;
-      sm.current.dotsOp = target.dotsOpacity;
       sm.current.dotsSc = target.dotsScale;
 
-      sm.current.nextX = target.nextX;
-      sm.current.nextY = target.nextY;
-      sm.current.nextRotY = target.nextRotY;
-      sm.current.nextOp = target.nextOpacity;
-      sm.current.nextSc = target.nextScale;
-
+      const modelTargets = mapModelTargets(secIdx, localT, target);
+      for (let i = 0; i < 8; i++) {
+        sm.current.modelX[i] = modelTargets[i].x;
+        sm.current.modelY[i] = modelTargets[i].y;
+        sm.current.modelRotY[i] = modelTargets[i].rotY;
+        sm.current.modelSc[i] = modelTargets[i].scale;
+      }
       prevSecIdx.current = secIdx;
     }
 
-    /* ---------------------------------------------------------------------- */
-    /* FRAME-RATE-INDEPENDENT SMOOTHING                                       */
-    /* ---------------------------------------------------------------------- */
-
+    /* FRAME-RATE-INDEPENDENT SMOOTHING */
     const POSITION_DAMP = 8;
     const ROTATION_DAMP = 10;
     const OPACITY_DAMP = 10;
     const SCALE_DAMP = 8;
 
-    sm.current.prevX =
-      THREE.MathUtils.damp(sm.current.prevX, target.prevX, POSITION_DAMP, delta);
+    /* Dots smoothing */
+    sm.current.dotsX = THREE.MathUtils.damp(sm.current.dotsX, target.dotsX, POSITION_DAMP, delta);
+    sm.current.dotsY = THREE.MathUtils.damp(sm.current.dotsY, target.dotsY, POSITION_DAMP, delta);
+    sm.current.dotsRotY = THREE.MathUtils.damp(sm.current.dotsRotY, target.dotsRotY, ROTATION_DAMP, delta);
+    sm.current.dotsOp = THREE.MathUtils.damp(sm.current.dotsOp, target.dotsOpacity, OPACITY_DAMP, delta);
+    sm.current.dotsSc = THREE.MathUtils.damp(sm.current.dotsSc, target.dotsScale, SCALE_DAMP, delta);
 
-    sm.current.prevY =
-      THREE.MathUtils.damp(sm.current.prevY, target.prevY, POSITION_DAMP, delta);
+    /* Per-model smoothing */
+    const modelTargets = mapModelTargets(secIdx, localT, target);
+    for (let i = 0; i < 8; i++) {
+      sm.current.modelOp[i] = THREE.MathUtils.damp(sm.current.modelOp[i], modelTargets[i].opacity, OPACITY_DAMP, delta);
+      sm.current.modelX[i] = THREE.MathUtils.damp(sm.current.modelX[i], modelTargets[i].x, POSITION_DAMP, delta);
+      sm.current.modelY[i] = THREE.MathUtils.damp(sm.current.modelY[i], modelTargets[i].y, POSITION_DAMP, delta);
+      sm.current.modelRotY[i] = THREE.MathUtils.damp(sm.current.modelRotY[i], modelTargets[i].rotY, ROTATION_DAMP, delta);
+      sm.current.modelSc[i] = THREE.MathUtils.damp(sm.current.modelSc[i], modelTargets[i].scale, SCALE_DAMP, delta);
+    }
 
-    sm.current.prevRotY =
-      THREE.MathUtils.damp(sm.current.prevRotY, target.prevRotY, ROTATION_DAMP, delta);
-
-    sm.current.prevOp =
-      THREE.MathUtils.damp(sm.current.prevOp, target.prevOpacity, OPACITY_DAMP, delta);
-
-    sm.current.prevSc =
-      THREE.MathUtils.damp(sm.current.prevSc, target.prevScale, SCALE_DAMP, delta);
-
-    /* ---------------------------------------------------------------------- */
-    /* DOTS                                                                   */
-    /* ---------------------------------------------------------------------- */
-
-    sm.current.dotsX =
-      THREE.MathUtils.damp(sm.current.dotsX, target.dotsX, POSITION_DAMP, delta);
-
-    sm.current.dotsY =
-      THREE.MathUtils.damp(sm.current.dotsY, target.dotsY, POSITION_DAMP, delta);
-
-    sm.current.dotsRotY =
-      THREE.MathUtils.damp(sm.current.dotsRotY, target.dotsRotY, ROTATION_DAMP, delta);
-
-    sm.current.dotsOp =
-      THREE.MathUtils.damp(sm.current.dotsOp, target.dotsOpacity, OPACITY_DAMP, delta);
-
-    sm.current.dotsSc =
-      THREE.MathUtils.damp(sm.current.dotsSc, target.dotsScale, SCALE_DAMP, delta);
-
-    /* ---------------------------------------------------------------------- */
-    /* NEXT MODEL                                                             */
-    /* ---------------------------------------------------------------------- */
-
-    sm.current.nextX =
-      THREE.MathUtils.damp(sm.current.nextX, target.nextX, POSITION_DAMP, delta);
-
-    sm.current.nextY =
-      THREE.MathUtils.damp(sm.current.nextY, target.nextY, POSITION_DAMP, delta);
-
-    sm.current.nextRotY =
-      THREE.MathUtils.damp(sm.current.nextRotY, target.nextRotY, ROTATION_DAMP, delta);
-
-    sm.current.nextOp =
-      THREE.MathUtils.damp(sm.current.nextOp, target.nextOpacity, OPACITY_DAMP, delta);
-
-    sm.current.nextSc =
-      THREE.MathUtils.damp(sm.current.nextSc, target.nextScale, SCALE_DAMP, delta);
-
-    /* ---------------------------------------------------------------------- */
-    /* APPLY DOTS                                                             */
-    /* ---------------------------------------------------------------------- */
-
+    /* APPLY DOTS */
     if (dotsRef.current) {
-
-      dotsRef.current.position.set(
-        sm.current.dotsX,
-        sm.current.dotsY,
-        0
-      );
-
-      dotsRef.current.rotation.y =
-        sm.current.dotsRotY;
-
-      dotsRef.current.scale.setScalar(
-        Math.max(
-          0.001,
-          sm.current.dotsSc
-        )
-      );
-
-      /*
-       * STRICT VISIBILITY GATING
-       * If target opacity is exactly 0 and current smoothed is low,
-       * snap to invisible and avoid ghosting from dampening.
-       */
-      if (target.dotsOpacity === 0 && sm.current.dotsOp < 0.05) {
-        dotsRef.current.visible = false;
-        sm.current.dotsOp = 0;
-      } else {
-        dotsRef.current.visible = true;
-        applyGroupOpacity(
-          dotsRef.current,
-          sm.current.dotsOp
-        );
-      }
+      dotsRef.current.visible = sm.current.dotsOp > 0.01;
+      dotsRef.current.position.set(sm.current.dotsX, sm.current.dotsY, 0);
+      dotsRef.current.rotation.y = sm.current.dotsRotY;
+      dotsRef.current.scale.setScalar(Math.max(0.001, sm.current.dotsSc));
+      applyGroupOpacity(dotsRef.current, sm.current.dotsOp);
     }
 
-    /* ---------------------------------------------------------------------- */
-    /* APPLY PREVIOUS MODEL                                                   */
-    /* ---------------------------------------------------------------------- */
-
-    if (prevRef.current) {
-
-      prevRef.current.position.set(
-        sm.current.prevX,
-        sm.current.prevY,
-        0
-      );
-
-      prevRef.current.rotation.y =
-        sm.current.prevRotY;
-
-      prevRef.current.scale.setScalar(
-        Math.max(
-          0.001,
-          sm.current.prevSc
-        )
-      );
-
-      applyGroupOpacity(
-        prevRef.current,
-        sm.current.prevOp
-      );
-    }
-
-    /* ---------------------------------------------------------------------- */
-    /* APPLY NEXT MODEL                                                       */
-    /* ---------------------------------------------------------------------- */
-
-    if (nextRef.current) {
-
-      nextRef.current.position.set(
-        sm.current.nextX,
-        sm.current.nextY,
-        0
-      );
-
-      nextRef.current.rotation.y =
-        sm.current.nextRotY;
-
-      nextRef.current.scale.setScalar(
-        Math.max(
-          0.001,
-          sm.current.nextSc
-        )
-      );
-
-      applyGroupOpacity(
-        nextRef.current,
-        sm.current.nextOp
-      );
+    /* APPLY MODELS */
+    for (let i = 0; i < 8; i++) {
+      const group = modelRefs.current[i];
+      if (!group) continue;
+      group.visible = sm.current.modelOp[i] > 0.01;
+      group.position.set(sm.current.modelX[i], sm.current.modelY[i], 0);
+      group.rotation.y = sm.current.modelRotY[i];
+      group.scale.setScalar(Math.max(0.001, sm.current.modelSc[i]));
+      applyGroupOpacity(group, sm.current.modelOp[i]);
     }
   });
 
-  /* ------------------------------------------------------------------------ */
-  /* CURRENT SECTION                                                          */
-  /* ------------------------------------------------------------------------ */
-
-  const clamped =
-    THREE.MathUtils.clamp(
-      scrollProgress,
-      0,
-      0.9999
-    );
-
-  const secIdx =
-    Math.floor(
-      clamped * SECTION_COUNT
-    );
-
-  /*
-   * Only mount models required for the current transition.
-   *
-   * prevRef mounts the current service's GLB (secIdx).
-   * nextRef mounts the next service's GLB (secIdx+1), or the same if last.
-   * The phase-based X positions in computeSectionState determine where
-   * each model appears, and the opacity values control visibility.
-   */
-  /*
-   * nextRef = currently settled (outgoing) model:
-   *   secIdx=0 (hero):  Web GLB — receives the dots→Web transformation
-   *   secIdx=1..8:      that section's own GLB (settled model)
-   *   secIdx=9 (outro): App Dev GLB exiting the composition
-   *   secIdx>=10:       null
-   *
-   * prevRef = incoming (next) model that appears at center and travels:
-   *   secIdx=1..7:      next section's GLB
-   *   otherwise:        null
-   */
-  const NextComp =
-    secIdx === 0 ? SERVICE_COMPONENTS[1]
-    : secIdx >= 1 && secIdx <= 8 ? SERVICE_COMPONENTS[secIdx]
-    : secIdx === 9 ? SERVICE_COMPONENTS[8]
-    : null;
-
-  const PrevComp =
-    secIdx >= 1 && secIdx <= 7 ? SERVICE_COMPONENTS[secIdx + 1]
-    : null;
-
-  /* ------------------------------------------------------------------------ */
-  /* RENDER                                                                   */
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
+  /* RENDER — all 7 models mounted permanently                              */
+  /* ---------------------------------------------------------------------- */
 
   return (
-
     <group ref={floatRef}>
-
-      {/* -------------------------------------------------------------- */}
-      {/* THREE DOT TRANSITION                                           */}
-      {/* -------------------------------------------------------------- */}
-
       <group ref={dotsRef}>
         <ThreeDotsGroup progress={0} />
       </group>
 
-      {/* -------------------------------------------------------------- */}
-      {/* PREVIOUS SERVICE                                               */}
-      {/* -------------------------------------------------------------- */}
-
-      <group ref={prevRef}>
-        {PrevComp && <PrevComp />}
-      </group>
-
-      {/* -------------------------------------------------------------- */}
-      {/* NEXT SERVICE                                                  */}
-      {/* -------------------------------------------------------------- */}
-
-      <group ref={nextRef}>
-        {NextComp && <NextComp />}
-      </group>
-
+      {MODEL_PATHS.map((path, i) => {
+        const idx = i + 1;
+        const Comp = SERVICE_COMPONENTS[idx];
+        return (
+          <group
+            key={`model-${i}`}
+            ref={(el) => { modelRefs.current[i] = el; }}
+          >
+            {Comp && <Comp />}
+          </group>
+        );
+      })}
     </group>
   );
 }

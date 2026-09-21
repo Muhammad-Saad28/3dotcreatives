@@ -2,9 +2,30 @@
 
 import { Suspense, useState, useEffect, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import CameraRig from "./CameraRig";
 import Lights from "./Lights";
 import ServiceStage from "./ServiceStage";
+
+const PRELOAD_PATHS = [
+  "/models/web.glb",
+  "/models/content creation.glb",
+  "/models/Camera.glb",
+  "/models/social media.glb",
+  "/models/digital marketing.glb",
+  "/models/GBP.glb",
+  "/models/packaging.glb",
+  "/models/content creation.glb",
+];
+
+function PreloadModels() {
+  useEffect(() => {
+    PRELOAD_PATHS.forEach((path) => {
+      useGLTF.preload(path);
+    });
+  }, []);
+  return null;
+}
 
 interface CreativeSceneProps {
   scrollProgress?: number;
@@ -119,6 +140,7 @@ export default function CreativeScene({
         style={{ background: "transparent" }}
       >
         <Suspense fallback={null}>
+          <PreloadModels />
           <SceneContent scrollProgress={effectiveProgress} splashDone={splashDone} />
         </Suspense>
       </Canvas>
