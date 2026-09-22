@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { portfolioItems, PortfolioItem } from "@/data/portfolio";
 import ProjectGalleryModal from "./ProjectGalleryModal";
@@ -38,23 +39,23 @@ export default function PortfolioGrid() {
                         Visit Website
                         <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                       </a>
-                      <button onClick={() => setSelectedProject(item)} className="inline-flex items-center gap-3 px-7 py-3.5 border border-dark-olive/20 text-dark-olive text-[11px] font-bold uppercase tracking-widest hover:bg-dark-olive hover:text-cream transition-colors duration-300 rounded-full w-fit hover:scale-105 active:scale-95">
+                      <Link href={`/portfolio/${item.id}`} className="inline-flex items-center gap-3 px-7 py-3.5 border border-dark-olive/20 text-dark-olive text-[11px] font-bold uppercase tracking-widest hover:bg-dark-olive hover:text-cream transition-colors duration-300 rounded-full w-fit hover:scale-105 active:scale-95">
                         View Project
                         <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                      </button>
+                      </Link>
                     </div>
                   ) : (
-                    <button onClick={() => setSelectedProject(item)} className="inline-flex items-center gap-3 px-7 py-3.5 mt-6 border border-dark-olive/20 text-dark-olive text-[11px] font-bold uppercase tracking-widest hover:bg-dark-olive hover:text-cream transition-colors duration-300 rounded-full w-fit cursor-pointer hover:scale-105 active:scale-95">
+                    <Link href={`/portfolio/${item.id}`} className="inline-flex items-center gap-3 px-7 py-3.5 mt-6 border border-dark-olive/20 text-dark-olive text-[11px] font-bold uppercase tracking-widest hover:bg-dark-olive hover:text-cream transition-colors duration-300 rounded-full w-fit cursor-pointer hover:scale-105 active:scale-95">
                       View Project
                       <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </Link>
                   )}
                 </div>
 
                 {/* Image Column */}
-                <div
+                <Link
+                  href={`/portfolio/${item.id}`}
                   className={`relative w-full aspect-[4/3] lg:aspect-[16/10] rounded-2xl bg-[#efe5d6]/60 p-6 lg:p-10 cursor-pointer flex items-center justify-center ${isImageRight ? 'order-1 lg:order-2' : 'order-1 lg:order-1'}`}
-                  onClick={() => setSelectedProject(item)}
                 >
                   <div className="relative w-full h-full rounded-xl overflow-hidden shadow-md">
                     <Image
@@ -65,7 +66,7 @@ export default function PortfolioGrid() {
                       sizes="(max-width: 1024px) 100vw, 50vw"
                     />
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* Divider */}
