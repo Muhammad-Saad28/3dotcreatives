@@ -6,28 +6,16 @@ import { ArrowRight } from "lucide-react";
 
 const projects = [
   {
-    image: "/images/portfolio_brand.png",
-    title: "Brand Identity",
-    category: "Branding",
-    desc: "Complete brand systems that tell your story across every touchpoint.",
-  },
-  {
-    image: "/images/portfolio_web.png",
+    image: "/images/web1.JPG",
     title: "Website Design",
     category: "Web Development",
     desc: "Fast, responsive websites built to convert visitors into customers.",
   },
   {
-    image: "/images/portfolio_social.png",
-    title: "Social Media",
-    category: "Social Media",
-    desc: "Scroll-stopping content strategies that grow your audience.",
-  },
-  {
-    image: "/images/portfolio_packaging.png",
-    title: "Packaging",
-    category: "Print & Packaging",
-    desc: "Physical designs that make your brand impossible to ignore.",
+    image: "/images/photoshoot4.JPG",
+    title: "Product Shoot",
+    category: "Photography",
+    desc: "High-quality product photography that showcases your brand.",
   },
 ];
 
@@ -69,9 +57,8 @@ export default function PortfolioPreviewSection() {
                 >
                   {/* Image */}
                   <div
-                    className={`relative aspect-[16/10] overflow-hidden rounded-xl bg-beige/20 ${
-                      imageOnLeft ? "sm:order-1" : "sm:order-2"
-                    }`}
+                    className={`relative aspect-[16/10] overflow-hidden rounded-xl bg-beige/20 ${imageOnLeft ? "sm:order-1" : "sm:order-2"
+                      }`}
                   >
                     <Image
                       src={project.image}
@@ -84,9 +71,8 @@ export default function PortfolioPreviewSection() {
 
                   {/* Text */}
                   <div
-                    className={`flex flex-col justify-center gap-3 py-4 ${
-                      imageOnLeft ? "sm:order-2 sm:pl-4" : "sm:order-1"
-                    }`}
+                    className={`flex flex-col justify-center gap-3 py-4 ${imageOnLeft ? "sm:order-2 sm:pl-4" : "sm:order-1"
+                      }`}
                   >
                     <p className="text-[10px] font-bold uppercase tracking-widest text-rust-gold">
                       {project.category}

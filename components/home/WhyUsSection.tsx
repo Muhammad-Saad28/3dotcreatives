@@ -88,56 +88,55 @@ export default function WhyUsSection() {
   return (
     <section
       id="why-us"
-      className="relative overflow-hidden"
+      className="relative overflow-hidden min-h-[400px] lg:min-h-[500px] flex items-center"
       aria-label="Why Choose Us"
     >
-      <div className="why-us-grid grid grid-cols-2 min-h-[320px] lg:min-h-[420px]">
-        {/* Left: Dark green panel */}
-        <div className="bg-dark-olive text-cream flex flex-col justify-center px-4 py-10 lg:px-10 lg:py-16">
-          <p className="text-[9px] lg:text-[10px] font-bold tracking-[0.22em] uppercase text-cream/40 mb-3 lg:mb-4">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/whychoosus.jpg"
+          alt="3 Dot Creatives why choose us"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-dark-olive/80" /> {/* Dark overlay for text readability */}
+      </div>
+
+      <div className="container-shell relative z-10 w-full py-16 lg:py-24">
+        <div className="text-cream flex flex-col justify-center">
+          <p className="text-[9px] lg:text-[10px] font-bold tracking-[0.22em] uppercase text-cream/60 mb-3 lg:mb-4">
             Why Choose Us
           </p>
-          <h2 className="font-display text-xl sm:text-2xl lg:text-5xl font-bold leading-tight mb-3 lg:mb-6">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-4 lg:mb-6">
             More Than Just
             <br />A Service
           </h2>
-          <p className="text-cream/60 text-xs lg:text-sm leading-relaxed max-w-sm mb-6 lg:mb-10 hidden sm:block">
+          <p className="text-cream/80 text-sm lg:text-base leading-relaxed max-w-xl mb-10 lg:mb-16">
             We believe in creativity with purpose. Our goal is to understand
             your brand, your audience and your vision — and turn it into
             results.
           </p>
 
           {/* Feature Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-6 lg:gap-8 max-w-4xl">
             {features.map((f, i) => (
               <div
                 key={f.label}
-                className="flex flex-col items-center gap-2 lg:gap-3 text-center group"
+                className="flex flex-col items-start sm:items-center sm:text-center gap-3 group"
                 style={{
                   animation: `serviceFloat 4s ease-in-out ${i * 0.3}s infinite`,
                 }}
               >
-                <div className="text-cream/70 group-hover:text-cream transition-colors duration-300">
+                <div className="text-cream/80 group-hover:text-cream transition-colors duration-300">
                   {f.icon}
                 </div>
-                <span className="text-cream/70 text-[10px] lg:text-xs leading-tight whitespace-pre-line group-hover:text-cream transition-colors duration-300">
+                <span className="text-cream/80 text-[11px] lg:text-sm leading-tight whitespace-pre-line group-hover:text-cream transition-colors duration-300">
                   {f.label}
                 </span>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Right: Image panel */}
-        <div className="relative min-h-0 overflow-hidden">
-          <Image
-            src="/images/about_branding.png"
-            alt="3 Dot Creatives branding"
-            fill
-            className="object-cover"
-            sizes="50vw"
-          />
-          <div className="absolute inset-0 bg-dark-olive/20" />
         </div>
       </div>
     </section>

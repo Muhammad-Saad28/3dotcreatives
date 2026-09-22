@@ -111,9 +111,8 @@ export default function Philosophy() {
               <ul className="space-y-6">
                 {reasons.map((reason, i) => (
                   <li key={i} className="flex items-start gap-4 group">
-                    <div className="flex gap-1.5 mt-2 shrink-0">
-                      <div className="w-1.5 h-1.5 rounded-full bg-olive group-hover:scale-150 transition-transform duration-300" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-rust-gold group-hover:scale-150 transition-transform duration-300" style={{ transitionDelay: "0.05s" }} />
+                    <div className="flex mt-2 shrink-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-cream group-hover:scale-150 transition-transform duration-300" />
                     </div>
                     <span className="text-cream/80 text-sm md:text-base font-medium group-hover:text-cream transition-colors duration-300">{reason}</span>
                   </li>

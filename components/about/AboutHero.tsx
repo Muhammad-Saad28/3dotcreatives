@@ -5,9 +5,24 @@ import { ArrowRight } from "lucide-react";
 import RevealSection from "../ui/RevealSection";
 
 const pillars = [
-  { label: "Idea", number: "01" },
-  { label: "Design", number: "02" },
-  { label: "Execution", number: "03" },
+  {
+    label: "Idea",
+    number: "01",
+    description: "Every great project begins with a spark. We listen, research, and strategize to find the perfect approach.",
+    theme: "light"
+  },
+  {
+    label: "Design",
+    number: "02",
+    description: "Where vision takes shape. Our design process blends aesthetics with functionality to create compelling experiences.",
+    theme: "dark"
+  },
+  {
+    label: "Execution",
+    number: "03",
+    description: "Ideas become reality. We build, test, and deliver with precision, ensuring every detail meets our standards.",
+    theme: "accent"
+  },
 ];
 
 export default function AboutHero() {
@@ -58,21 +73,51 @@ export default function AboutHero() {
             experiences. We believe in the power of three.
           </p>
 
-          {/* Three pillars */}
-          <div className="flex flex-wrap justify-center gap-4 mb-14">
-            {pillars.map((pillar) => (
-              <div
-                key={pillar.label}
-                className="group flex items-center gap-3 px-6 py-3 border border-dark-olive/15 rounded-full hover:bg-dark-olive hover:border-dark-olive transition-all duration-300 cursor-default"
-              >
-                <span className="font-mono text-[10px] text-dark-olive/40 group-hover:text-cream/50 transition-colors">
-                  {pillar.number}
-                </span>
-                <span className="font-display font-bold text-sm tracking-wide text-dark-olive group-hover:text-cream transition-colors">
-                  {pillar.label}
-                </span>
-              </div>
-            ))}
+          {/* Three pillars - Expanding Flex Accordion */}
+          <div className="flex flex-col md:flex-row w-full min-h-[200px] md:h-[320px] gap-4 max-w-6xl mx-auto mb-16">
+            {pillars.map((pillar) => {
+              const isLight = pillar.theme === "light";
+              const bgClass = isLight ? "bg-[#efe5d6] border-beige/40" : pillar.theme === "dark" ? "bg-dark-olive border-dark-olive" : "bg-olive border-olive";
+              const textClass = isLight ? "text-dark-olive" : "text-cream";
+              const textMutedClass = isLight ? "text-dark-olive/70" : "text-cream/70";
+              const numClass = isLight ? "text-dark-olive/5 group-hover:text-dark-olive/10" : "text-cream/5 group-hover:text-cream/10";
+              const borderClass = isLight ? "border-dark-olive/10" : "border-cream/10";
+              const iconBgClass = isLight ? "bg-dark-olive/10" : "bg-cream/10";
+
+              return (
+                <div
+                  key={pillar.label}
+                  className={`group relative flex-1 hover:flex-[2] md:hover:flex-[2.5] transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] rounded-3xl overflow-hidden flex flex-col justify-end p-6 md:p-8 cursor-default border ${bgClass}`}
+                >
+                  {/* Large Background Number */}
+                  <div className={`absolute top-4 right-6 font-display text-6xl lg:text-7xl font-bold transition-colors duration-700 select-none ${numClass}`}>
+                    {pillar.number}
+                  </div>
+
+                  <div className="relative z-10 w-full overflow-hidden">
+                    <div className="flex items-end justify-between w-full min-w-[120px]">
+                      <h3 className={`font-display text-2xl md:text-3xl lg:text-4xl font-bold mb-2 transform origin-left transition-transform duration-700 ${textClass}`}>
+                        {pillar.label}
+                      </h3>
+                      {/* Arrow icon */}
+                      <div className={`shrink-0 w-8 h-8 rounded-full ${iconBgClass} flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:-rotate-45 transition-all duration-700 mb-2 transform translate-x-4 group-hover:translate-x-0`}>
+                        <ArrowRight size={16} className="text-rust-gold" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                      <div className="overflow-hidden">
+                        <p className={`text-xs lg:text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-150 ${textMutedClass}`}>
+                          <span className={`block pt-3 border-t ${borderClass} mt-2 w-full md:w-[260px] lg:w-[280px]`}>
+                            {pillar.description}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {/* CTA */}

@@ -10,12 +10,12 @@ export default function AboutSection() {
       <div className="container-shell">
         <div className="grid grid-cols-2 gap-4 lg:gap-16 items-center">
           {/* Left: Image */}
-          <div className="relative w-full aspect-square overflow-hidden rounded-2xl">
+          <div className="relative w-full aspect-square overflow-hidden rounded-2xl group">
             <Image
-              src="/images/about_branding.png"
+              src="/images/aboutus.JPG"
               alt="3 Dot Creatives notebook and branding"
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               sizes="50vw"
             />
           </div>

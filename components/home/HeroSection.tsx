@@ -67,17 +67,17 @@ export default function HeroSection() {
           </div>
 
           {/* Right: Hero Image */}
-          <div className="relative w-full h-[180px] sm:h-[300px] lg:h-[600px] overflow-hidden rounded-tl-[40px] sm:rounded-tl-[80px] lg:rounded-tl-[300px] rounded-br-[40px] sm:rounded-br-[80px] lg:rounded-br-[300px]">
+          <div className="relative w-full h-[200px] sm:h-[200px] lg:h-[550px] overflow-hidden group">
             <Image
-              src="/images/bg-hero.png"
+              src="/images/hero121212.JPG"
               alt="3 Dot Creatives creative agency"
               fill
-              className="object-cover object-[75%_center]"
+              className="object-cover object-[40%_center] transition-transform duration-700 group-hover:scale-105"
               sizes="50vw"
             />
           </div>
-          </div>
         </div>
+      </div>
     </section>
   );
 }
