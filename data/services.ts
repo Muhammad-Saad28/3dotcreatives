@@ -40,9 +40,9 @@ export const services: Service[] = [
     id: "social-media",
     slug: "social-media",
     number: "03",
-    title: "Social Media Handling",
+    title: "Social Media Managment",
     description:
-      "Strategic social media management that builds community, drives engagement, and strengthens your brand presence across platforms.",
+      "Strategic social media managment that builds community, drives engagement, and strengthens your brand presence across platforms.",
     features: [
       "Content Strategy",
       "Community Management",

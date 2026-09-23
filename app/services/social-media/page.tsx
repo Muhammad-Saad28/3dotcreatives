@@ -82,7 +82,7 @@ export default function SocialMediaPage() {
         <ServicePageHero
           label="Social Media"
           title="Your Brand Deserves More Than Just a Feed"
-          description="We build social media experiences that make brands recognizable, relevant, and consistent. From strategy and content to publishing and optimization, we help turn your social presence into a real brand asset."
+          description="We build social media managment experiences that make brands recognizable, relevant, and consistent. From strategy and content to publishing and optimization, we help turn your social presence into a real brand asset."
         />
 
         {/* Divider */}
@@ -108,7 +108,7 @@ export default function SocialMediaPage() {
 
         <EditorialSection
           label="What We Focus On"
-          title="Consistency. Creativity. Community. Growth. Because social media isn't simply about posting regularly. It's about building a recognizable presence that people want to follow."
+          title="Consistency. Creativity. Community. Growth. Because social media managment isn't simply about posting regularly. It's about building a recognizable presence that people want to follow."
           highlight="Consistency. Creativity. Community. Growth."
         />
 

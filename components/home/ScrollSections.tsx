@@ -142,7 +142,7 @@ const SECTIONS = [
     num: "04",
     title: "SOCIAL MEDIA",
     tagline: "TURN ATTENTION INTO CONNECTION.",
-    desc: "Strategic social media management, content planning and brand presence designed for consistent growth.",
+    desc: "Strategic social media managment, content planning and brand presence designed for consistent growth.",
     align: "right",
   },
   /* 05 */ {

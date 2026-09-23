@@ -7,9 +7,9 @@ import RevealSection from "../ui/RevealSection";
 const footerServices = [
   { href: "/services/web-development", label: "Web Development" },
   { href: "/services/content-creation", label: "Content Creation" },
-  { href: "/services/social-media", label: "Social Media Handling" },
+  { href: "/services/social-media", label: "Social Media Managment" },
   { href: "/services/app-development", label: "App Development" },
-  { href: "/services/product-shoots", label: "Product Shoots & Mgmt" },
+  { href: "/services/product-shoots", label: "Product Shoots" },
   { href: "/services/gbp-management", label: "GBP Management" },
   { href: "/services/printing-packaging", label: "Printing & Packaging" },
   { href: "/services/digital-marketing", label: "Digital Marketing" },
