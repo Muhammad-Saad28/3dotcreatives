@@ -14,7 +14,7 @@ export default function HeroSection() {
       <div className="container-shell w-full py-16 lg:py-0 relative z-10">
         <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:gap-8 items-center min-h-[80vh]">
           {/* Left: Text Content */}
-          <div className="hero-content flex flex-col justify-center pt-22 lg:pt-0 z-10 pl-4 pr-2 lg:pl-8 lg:pr-13">
+          <div className="hero-content flex flex-col justify-center h-full z-10 pl-4 pr-2 lg:pl-8 lg:pr-13">
             {/* Eyebrow */}
             <div className="flex items-center gap-1.5 lg:gap-2 mb-4 lg:mb-6 hero-eyebrow flex-wrap">
               <span className="text-[8px] lg:text-[10px] font-bold tracking-[0.22em] uppercase text-olive/60">
@@ -67,7 +67,7 @@ export default function HeroSection() {
           </div>
 
           {/* Right: Hero Image */}
-          <div className="relative w-full h-[200px] sm:h-[200px] lg:h-[550px] overflow-hidden group">
+          <div className="relative w-full h-[200px] sm:h-[200px] lg:h-[550px] overflow-hidden group mt-12 lg:mt-24">
             <Image
               src="/images/hero121212.JPG"
               alt="3 Dot Creatives creative agency"
