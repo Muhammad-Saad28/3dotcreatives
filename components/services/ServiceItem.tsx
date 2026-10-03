@@ -59,8 +59,8 @@ export default function ServiceItem({
               {service.description}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mb-8">
-              {service.features.map((feature) => (
-                <div key={feature} className="flex items-center gap-3">
+              {service.capabilities.slice(0, 4).map((feature, idx) => (
+                <div key={idx} className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-olive shrink-0" />
                   <span className="text-sm font-semibold text-dark-olive/60">{feature}</span>
                 </div>

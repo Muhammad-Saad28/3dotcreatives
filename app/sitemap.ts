@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/seo";
 import { services } from "@/data/services";
 import { portfolioItems } from "@/data/portfolio";
+import { insights } from "@/data/insights";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
@@ -56,5 +57,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...routes, ...serviceRoutes, ...portfolioRoutes];
+  // Dynamic Insights routes
+  const insightRoutes: MetadataRoute.Sitemap = insights.map((insight) => ({
+    url: `${baseUrl}/insights/${insight.slug}`,
+    lastModified: new Date(insight.date),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  // Insights listing route
+  const insightsIndexRoute: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/insights`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }
+  ];
+
+  return [...routes, ...serviceRoutes, ...portfolioRoutes, ...insightsIndexRoute, ...insightRoutes];
 }
