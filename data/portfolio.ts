@@ -10,6 +10,11 @@ export interface PortfolioItem {
   link?: string;
   gallery?: string[];
   technologies?: string[];
+  client?: string;
+  industry?: string;
+  problem?: string;
+  solution?: string;
+  results?: string[];
 }
 
 export const portfolioItems: PortfolioItem[] = [
@@ -23,6 +28,11 @@ export const portfolioItems: PortfolioItem[] = [
     image: "/images/rigidengg/12.png",
     link: "https://rigidengg.com",
     technologies: ["React", "Next.js", "HTML", "CSS", "TailwindCSS"],
+    client: "Rigid Engineering",
+    industry: "Engineering & Construction",
+    problem: "Outdated digital presence that didn't reflect their precision and professionalism.",
+    solution: "Designed and developed a fast, SEO-optimized corporate website with clear service offerings.",
+    results: ["Improved organic search visibility", "Increased client inquiries", "Enhanced brand trust"],
     gallery: [
       "/images/rigidengg/2.png",
       "/images/rigidengg/3.png",
@@ -43,6 +53,11 @@ export const portfolioItems: PortfolioItem[] = [
     image: "/images/afghantappeti/11.png",
     link: "https://afghantapetti.netlify.app/",
     technologies: ["React", "Next.js", "HTML", "CSS", "TailwindCSS"],
+    client: "AfghanTappeti",
+    industry: "Retail & eCommerce",
+    problem: "Needed a platform to showcase intricate rug details and provide a seamless checkout.",
+    solution: "Built a high-performance eCommerce site with advanced filtering and image galleries.",
+    results: ["Higher conversion rates", "Reduced bounce rate", "Better mobile shopping experience"],
     gallery: [
       "/images/afghantappeti/2.png",
       "/images/afghantappeti/3.png",

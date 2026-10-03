@@ -38,10 +38,11 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-dark-olive leading-[0.95]">
+        <h1 className="sr-only">Creative Digital Agency in Lahore</h1>
+        <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-dark-olive leading-[0.95]">
           <span className="block">WE CREATE IN</span>
           <span className="block mt-2">THREE DIMENSIONS.</span>
-        </h1>
+        </h2>
         <p className="mt-8 text-lg md:text-xl text-dark-olive/60 max-w-2xl mx-auto leading-relaxed">
           Digital experiences, content and brands built to move people.
         </p>

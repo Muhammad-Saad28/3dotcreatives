@@ -1,9 +1,0 @@
-# https://www.robotstxt.org/robotstxt.html
-
-User-agent: *
-Allow: /
-
-Sitemap: https://3dotcreatives.agency/sitemap.xml
-
-# Disallow API routes
-Disallow: /api/

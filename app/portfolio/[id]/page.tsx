@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { createCanonical } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
@@ -12,6 +14,23 @@ export function generateStaticParams() {
   return portfolioItems.map((item) => ({
     id: item.id,
   }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const project = portfolioItems.find((p) => p.id === resolvedParams.id);
+  
+  if (!project) {
+    return { title: "Case Study Not Found" };
+  }
+
+  return {
+    title: `${project.title} | Case Study | 3 Dot Creatives`,
+    description: project.description,
+    alternates: {
+      canonical: createCanonical(`/portfolio/${resolvedParams.id}`),
+    },
+  };
 }
 
 export default async function ProjectDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -60,6 +79,49 @@ export default async function ProjectDetailsPage({ params }: { params: Promise<{
                     About The Project
                   </h2>
                   <p>{project.fullDescription || project.description}</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                  <div className="md:col-span-2 space-y-8">
+                    {project.problem && (
+                      <section className="prose prose-lg prose-olive text-dark-olive/70 leading-relaxed max-w-none text-justify">
+                        <h2 className="font-display text-2xl font-bold text-dark-olive mb-4 text-left">The Challenge</h2>
+                        <p>{project.problem}</p>
+                      </section>
+                    )}
+
+                    {project.solution && (
+                      <section className="prose prose-lg prose-olive text-dark-olive/70 leading-relaxed max-w-none text-justify">
+                        <h2 className="font-display text-2xl font-bold text-dark-olive mb-4 text-left">Our Solution</h2>
+                        <p>{project.solution}</p>
+                      </section>
+                    )}
+                  </div>
+
+                  <aside className="space-y-8 bg-dark-olive/5 p-8 rounded-2xl h-fit">
+                    {project.client && (
+                      <div>
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-olive mb-2">Client</h3>
+                        <p className="text-lg font-medium text-dark-olive">{project.client}</p>
+                      </div>
+                    )}
+                    {project.industry && (
+                      <div>
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-olive mb-2">Industry</h3>
+                        <p className="text-lg font-medium text-dark-olive">{project.industry}</p>
+                      </div>
+                    )}
+                    {project.results && (
+                      <div>
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-olive mb-2">Key Results</h3>
+                        <ul className="list-disc list-inside text-sm font-medium space-y-1 text-dark-olive/80">
+                          {project.results.map(result => (
+                            <li key={result}>{result}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </aside>
                 </div>
 
                 {project.technologies && project.technologies.length > 0 && (

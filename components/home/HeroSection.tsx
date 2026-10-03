@@ -16,7 +16,7 @@ export default function HeroSection() {
           {/* Left: Text Content */}
           <div className="hero-content flex flex-col justify-center h-full z-10 pl-4 pr-2 lg:pl-8 lg:pr-13">
             {/* Eyebrow */}
-            <div className="flex items-center gap-1.5 lg:gap-2 mb-4 lg:mb-6 hero-eyebrow flex-wrap">
+            <div className="flex items-center gap-1.5 lg:gap-2 mb-4 lg:mb-6 hero-eyebrow flex-wrap mt-12 lg:mt-16">
               <span className="text-[8px] lg:text-[10px] font-bold tracking-[0.22em] uppercase text-olive/60">
                 Ideas
               </span>
@@ -36,7 +36,7 @@ export default function HeroSection() {
 
             {/* Headline */}
             <h1
-              className="hero-headline font-display text-[1.75rem] sm:text-[clamp(2.5rem,5vw,4rem)] lg:text-[clamp(3.5rem,7vw,5.5rem)] font-bold leading-[1.05] tracking-tight text-dark-olive mb-4 lg:mb-6"
+              className="hero-headline font-display text-[1.75rem] sm:text-[clamp(2.5rem,5vw,4rem)] lg:text-[clamp(3rem,5vw,4.5rem)] font-bold leading-[1.05] tracking-tight text-dark-olive mb-4 lg:mb-6"
               style={{ letterSpacing: "-0.02em" }}
             >
               Your Vision

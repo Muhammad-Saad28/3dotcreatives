@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -41,9 +42,11 @@ export default function Navbar() {
           aria-label="3dotcreatives home"
           className="flex items-center gap-2 shrink-0 group"
         >
-          <img
+          <Image
             src="/logo.jpeg"
-            alt="3dotcreatives"
+            alt="3 Dot Creatives - Creative Digital Agency Logo"
+            width={100}
+            height={50}
             className="h-18 w-auto object-contain transition-transform duration-300 group-hover:scale-105 rounded-2xl"
           />
         </Link>
