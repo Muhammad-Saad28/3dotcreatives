@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/seo";
+import { services } from "@/data/services";
+import { portfolioItems } from "@/data/portfolio";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
 
-  return [
+  // Base routes
+  const routes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -35,6 +38,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    // We can add individual service URLs dynamically later
   ];
+
+  // Dynamic Service routes
+  const serviceRoutes: MetadataRoute.Sitemap = services.map((service) => ({
+    url: `${baseUrl}/services/${service.id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  // Dynamic Portfolio routes
+  const portfolioRoutes: MetadataRoute.Sitemap = portfolioItems.map((item) => ({
+    url: `${baseUrl}/portfolio/${item.id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...routes, ...serviceRoutes, ...portfolioRoutes];
 }

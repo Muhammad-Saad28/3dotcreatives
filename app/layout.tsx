@@ -5,6 +5,7 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 import "./globals.css";
 import OrganizationJsonLd from "@/components/seo/OrganizationJsonLd";
 import LocalBusinessJsonLd from "@/components/seo/LocalBusinessJsonLd";
+import { siteConfig } from "@/lib/seo";
 
 const geist = Geist({
   variable: "--font-geist-sans",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
     default: "3 Dot Creatives | Creative Digital Agency in Lahore",
     template: "%s | 3 Dot Creatives",
   },
-  description: "3 Dot Creatives is a creative digital agency in Lahore, Pakistan offering web development, app development, digital marketing, social media, content creation and creative solutions.",
+  description: siteConfig.description,
   alternates: {
     canonical: "/",
   },
@@ -33,12 +34,12 @@ export const metadata: Metadata = {
     url: "https://3dotcreatives.agency",
     siteName: "3 Dot Creatives",
     title: "3 Dot Creatives | Creative Digital Agency in Lahore",
-    description: "3 Dot Creatives is a creative digital agency in Lahore, Pakistan offering web development, app development, digital marketing, social media, content creation and creative solutions.",
+    description: siteConfig.description,
   },
   twitter: {
     card: "summary_large_image",
     title: "3 Dot Creatives | Creative Digital Agency in Lahore",
-    description: "3 Dot Creatives is a creative digital agency in Lahore, Pakistan.",
+    description: siteConfig.description,
   },
 };
 

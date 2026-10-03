@@ -72,6 +72,7 @@ export default function HeroSection() {
               src="/images/hero121212.JPG"
               alt="3 Dot Creatives creative agency"
               fill
+              priority
               className="object-cover object-[40%_center] transition-transform duration-700 group-hover:scale-105"
               sizes="50vw"
             />
